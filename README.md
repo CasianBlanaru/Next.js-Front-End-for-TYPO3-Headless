@@ -1,135 +1,129 @@
-# TYPO3 Headless Next.js Frontend
+# NextWTL Headless for TYPO3
 
-![TYPO3](https://img.shields.io/badge/TYPO3-v12%2Fv13-orange?logo=typo3)
-![Next.js](https://img.shields.io/badge/Next.js-v15%2B-black?logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
-[![CI](https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless/actions/workflows/ci.yml/badge.svg)](https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless/actions/workflows/ci.yml)
-![License](https://img.shields.io/badge/License-MIT-green)
+This solution is based on the following TYPO3 initiatives:
 
-The most professional, production-ready, open-source Next.js frontend for **TYPO3 Headless**. Built with modern best practices for React 19, TypeScript, and the TYPO3 ecosystem.
+-   [TYPO3 Headless](https://github.com/TYPO3-Headless/headless)
+-   [TYPO3 Headless News](https://github.com/TYPO3-Headless/headless_news)
 
----
+## Prerequisites
 
-## 🚀 Features
+Make sure you have [DDEV](https://ddev.readthedocs.io/en/stable/) version `v1.12.7` or newer installed.
 
-- **TYPO3 Headless Integration**: Seamlessly renders content from the [TYPO3 Headless extension](https://github.com/friendsoftypo3/headless).
-- **Dynamic Routing**: Automatic slug resolution for TYPO3 pages.
-- **Frontend Editing**: Real-time content editing support directly in the frontend.
-- **Advanced Search**: Integrated search functionality with faceting and KI support.
-- **SEO Optimized**: Dynamic metadata, OpenGraph, Twitter cards, and sitemap generation.
-- **Image Optimization**: Automatic image processing via TYPO3 and Next.js Image.
-- **GSAP Animations**: Smooth, high-performance animations for content elements.
-- **TypeScript**: 100% type-safe codebase with strict mode enabled.
-- **Enterprise Testing**: Robust testing suite with Vitest and Playwright.
+We recommend Unix-based operating systems like Linux or macOS, as issues have been encountered with WSL2 usage.
 
----
+## Installation
 
-## 🏗️ Architecture
-
-The project follows a modular architecture that separates the API communication, content rendering, and UI components.
-
-```mermaid
-graph TD
-    T[TYPO3 Backend] -->|JSON API| H[Headless Extension]
-    H -->|API Calls| C[API Client / Typo3 Lib]
-    C -->|Typed Data| R[Renderer]
-    R -->|Component Mapping| PC[React Components]
-    PC -->|Next.js App Router| W[Web Browser]
-```
-
-### Core Components
-
-1.  **API Client (`src/lib/typo3.ts`)**: Handles all communication with the TYPO3 Headless API, including caching and authentication.
-2.  **Renderer (`src/components/Renderer.tsx`)**: Maps TYPO3 content elements (CTypes) to React components.
-3.  **App Router**: Utilizes Next.js 15+ features for server-side rendering and metadata management.
-
----
-
-## 📦 Relationship with `@pixelcoda/headless-nextjs`
-
-This repository serves as a **reference implementation** and starter template that utilizes the core logic provided by the `@pixelcoda/headless-nextjs` package.
-
--   **`@pixelcoda/headless-nextjs`**: Contains shared logic, base components (like `T3Frame`), and developer tools. It is designed to be version-independent and reusable across multiple TYPO3 projects.
--   **This Repository**: Provides the project-specific configuration, layout, styling, and custom component implementations. It is the "glue" that brings the package features into a concrete website.
-
----
-
-## 🛠️ Getting Started
-
-### Prerequisites
-
--   Node.js 22.0.0 or higher
--   A running TYPO3 instance with `ext:headless` and `ext:headless_typo3` installed.
-
-### Installation
+2. Start the DDEV Docker containers:
 
 ```bash
-# Clone the repository
-git clone https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git
-cd Next.js-Front-End-for-TYPO3-Headless
+ddev start
+```
 
-# Install dependencies
-npm install
+3. To start the Next.js frontend application, run the following command:
+
+```bash
+ddev exec "cd front && yarn dev"
+```
+
+You can now access the application in your browser at the following links:
+
+| Application   | URL                                  | Credentials      |
+| ------------- | ------------------------------------ | ---------------- |
+| Frontend      | https://next-typo3.ddev.site          |                  |
+| TYPO3 Backend | https://api.next-typo3/typo3 | `admin:password` |
+
+## Frontend Development with Next.js
+
+Start the Next.js application in development mode with:
+
+```bash
+ddev exec "cd front && yarn dev"
+```
+
+## Update Database
+
+Occasionally, the database for the `pwa-next` project is updated. If you want to update your local database, run the following command in the project root directory:
+
+```bash
+ddev import-db --file ./data/db.sql.gz
 ```
 
 ### Configuration
 
-Copy `.env.example` to `.env.local` and update the values:
+-   Create `.env.local` with the backend URL and other required environment variables.
+
+📦 pwa-next
+├── 📂 backend - Contains the TYPO3 backend
+│ ├── 📂 packages - Configuration files for TYPO3
+│      └── 📂 site-package - Uploaded files
+├── 📂 frontend - Next.js frontend application
+│ ├── 📂 components - Reusable components
+│ ├── 📂 pages - Application pages and routes
+│ ├── 📂 hooks - React hooks for logic management
+│ └── 📂 styles - Tailwind CSS/SCSS styling
+├── 📂 data - Database and SQL files
+├── 📂 docker - Docker configurations for DDEV
+└── 📂 config - DDEV-specific configuration files
+
+## PixelCoda Headless integration
+
+This frontend includes first-class preparation for `EXT:pixelcoda_headless`.
+
+Supported metadata:
+
+- `layout.identifier`
+- `container.columns[]`
+- `responsive.desktop/tablet/mobile.grid`
+- `order.desktop/tablet/mobile`
+- `spacing.gap`
+- `width`
+- `preview`
+- `devtools`
+
+Example response fragment:
+
+```json
+{
+  "layout": { "identifier": "two-column" },
+  "container": {
+    "identifier": "three-column",
+    "columns": [
+      { "name": "left", "colPos": 200 },
+      { "name": "center", "colPos": 201 },
+      { "name": "right", "colPos": 202 }
+    ]
+  },
+  "responsive": {
+    "desktop": { "grid": "4-4-4" },
+    "tablet": { "grid": "6-6" },
+    "mobile": { "grid": "12" }
+  },
+  "spacing": { "gap": "lg" },
+  "width": "contained"
+}
+```
+
+## Headless DevTools
+
+The built-in inspector is available in development. Toggle it with:
+
+```txt
+CMD + SHIFT + H
+CTRL + SHIFT + H
+```
+
+Disable it explicitly with:
 
 ```env
-NEXT_PUBLIC_TYPO3_BASE_URL=https://your-typo3-instance.com
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_HEADLESS_DEVTOOLS=false
 ```
 
-### Development
+Included panels:
 
-```bash
-npm run dev
-```
+- Inspector
+- JSON
+- Layout
+- API
+- Mapping
 
----
-
-## 🧪 Testing
-
-We take quality seriously. The project includes unit, component, and E2E tests.
-
-```bash
-# Run unit tests
-npm test
-
-# Run type check
-npm run typecheck
-
-# Run E2E tests
-npx playwright test
-```
-
----
-
-## 🚢 Deployment
-
-### Vercel / Railway / Docker
-
-The project is optimized for modern cloud platforms and includes a `Dockerfile` for containerized environments.
-
-```bash
-docker build -t typo3-nextjs-frontend .
-```
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Support for TYPO3 14 LTS
-- [ ] Advanced form rendering with `ext:form`
-- [ ] Multi-language switcher component
-- [ ] Improved documentation for custom CTypes
-- [ ] Lighthouse Performance > 98 target
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-Developed with ❤️ by [PixelCoda](https://pixelcoda.com).
+The page renderer annotates TYPO3 content elements with `data-t3-*` attributes, so developers can inspect UID, type, colPos and renderer mapping directly in the browser.

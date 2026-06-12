@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2022",
     "lib": [
       "dom",
       "dom.iterable",
@@ -18,16 +18,25 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@services/*": ["src/services/*"],
+      "@types/*": ["src/types/*"],
+      "@styles/*": ["src/styles/*"],
+      "@lib/*": ["src/lib/*"],
+      "@skins/*": ["src/skins/*"],
+      "@registry/*": ["src/registry/*"],
+      "@config/*": ["src/config/*"]
+    },
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    ]
   },
   "include": [
     "next-env.d.ts",
