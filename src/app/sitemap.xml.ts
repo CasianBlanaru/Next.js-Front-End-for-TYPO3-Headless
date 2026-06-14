@@ -11,7 +11,7 @@ export async function GET() {
     .map(
       (route) => `
   <url>
-    <loc>${new URL(route.path, siteUrl).toString()}</loc>
+    <loc>${siteUrl ? new URL(route.path, siteUrl).toString() : route.path}</loc>
     ${route.lastmod ? `<lastmod>${route.lastmod}</lastmod>` : ''}
     <priority>${route.priority || 0.5}</priority>
   </url>`

@@ -9,7 +9,8 @@ export async function GET() {
 Allow: /
 Sitemap: ${new URL('/sitemap.xml', siteUrl).toString()}`
     : `User-agent: *
-Disallow: /`;
+Disallow: /
+${siteUrl ? `Sitemap: ${new URL('/sitemap.xml', siteUrl).toString()}` : ''}`;
 
   return new Response(robots, {
     headers: {
