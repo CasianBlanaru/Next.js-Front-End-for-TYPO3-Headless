@@ -9,6 +9,9 @@ module.exports = {
 
   allowedDevOrigins: [
     "nextjs-demo.ddev.site",
+    "api.nextjs-demo.ddev.site",
+    "pwa-demo.ddev.site",
+    "api.pwa-demo.ddev.site",
     "localhost",
     "127.0.0.1",
   ],
