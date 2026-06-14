@@ -21,16 +21,15 @@
     "baseUrl": ".",
     "ignoreDeprecations": "6.0",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@services/*": ["src/services/*"],
-      "@types/*": ["src/types/*"],
-      "@styles/*": ["src/styles/*"],
-      "@lib/*": ["src/lib/*"],
-      "@skins/*": ["src/skins/*"],
-      "@registry/*": ["src/registry/*"],
-      "@config/*": ["src/config/*"]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*", "./components/*"],
+      "@services/*": ["./src/services/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@hooks/*": ["./src/hooks/*", "./hooks/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@config/*": ["./src/config/*"],
+      "@types": ["./src/types/index"],
+      "@types/*": ["./src/types/*"]
     },
     "plugins": [
       {
@@ -42,6 +41,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "src",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

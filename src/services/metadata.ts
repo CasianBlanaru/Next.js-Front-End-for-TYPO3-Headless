@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getSiteUrl } from './api';
 import { normalizeFileUrl } from './media';
-import type { T3Page } from '@/types';
+import type { T3Page } from '@types';
 
 function getCanonicalHref(pageData: T3Page | null, pathname: string): string {
   const SITE_URL = getSiteUrl();

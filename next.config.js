@@ -1,48 +1,19 @@
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ||
-  process.env.NEXT_PUBLIC_HOSTNAME ||
-  "https://pwa-demo.ddev.site/headless";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://pwa-demo.ddev.site";
-
-function toRemotePattern(value) {
-  const parsedUrl = new URL(value.replace(/\/$/, "") + "/");
-
-  return {
-    protocol: parsedUrl.protocol.replace(":", ""),
-    hostname: parsedUrl.hostname,
-  };
-}
-
-const remotePatterns = [
-  toRemotePattern(apiBaseUrl),
-  toRemotePattern(siteUrl),
-];
+const path = require("path");
 
 module.exports = {
   reactStrictMode: true,
 
-  typescript: {
-    ignoreBuildErrors: false,
+  turbopack: {
+    root: path.resolve(__dirname),
   },
 
-  turbopack: {
-    root: '.',
-  },
+  allowedDevOrigins: [
+    "nextjs-demo.ddev.site",
+    "localhost",
+    "127.0.0.1",
+  ],
 
   images: {
     unoptimized: true,
-
-    remotePatterns: remotePatterns.filter(
-      (pattern, index, self) =>
-        self.findIndex(
-          (item) =>
-            item.hostname === pattern.hostname &&
-            item.protocol === pattern.protocol
-        ) === index
-    ),
   },
 };

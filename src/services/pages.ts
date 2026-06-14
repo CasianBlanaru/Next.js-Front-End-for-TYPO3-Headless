@@ -1,6 +1,6 @@
 import type { FetchOptions } from 'ofetch';
 import { t3Fetch } from './api';
-import type { T3Page } from "@/types";
+import type { T3Page } from "@types";
 import { buildPreviewQuery, type PreviewContext } from '@lib/preview';
 import { cacheTypo3Fetch, buildCacheTags } from '../lib/cache';
 

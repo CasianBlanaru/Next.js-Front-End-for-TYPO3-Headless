@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import type { T3Page } from '@/types';
 import T3Renderer from '@components/layout/T3Renderer/T3Renderer';
@@ -39,11 +40,25 @@ function Breadcrumbs({ breadcrumbs }: { breadcrumbs?: Array<Record<string, any>>
   );
 }
 
+function ContentLayout({ pageData, layoutId }: { pageData: T3Page; layoutId?: string }) {
+  const layout = getLayoutComponent(layoutId);
+  const inner = (
+    <section className="grid gap-8">
+      {Object.entries(pageData.content || {}).map(([column, elements]) => (
+        <div key={column} className="space-y-8" aria-label={`Content column ${column}`} data-pixelcoda-colpos={column}>
+          <T3Renderer content={elements} />
+        </div>
+      ))}
+    </section>
+  );
+  return React.createElement(layout, { title: pageData.title }, inner);
+}
+
 export default function PageContent({ pageData }: PageContentProps) {
   const pixelcoda = getPixelcodaMeta(pageData as unknown as Record<string, unknown>);
-  const LayoutComponent = getLayoutComponent(pixelcoda.layout?.identifier ?? pageData.appearance?.backendLayout);
   const containerColumns = pixelcoda.container?.columns ?? [];
   const hasContainerColumns = containerColumns.length > 0;
+  const layoutId = pixelcoda.layout?.identifier ?? pageData.appearance?.backendLayout;
 
   return (
     <>
@@ -69,15 +84,7 @@ export default function PageContent({ pageData }: PageContentProps) {
             ))}
           </ResponsiveContainer>
         ) : (
-          <LayoutComponent title={pageData.title}>
-            <section className="grid gap-8">
-              {Object.entries(pageData.content || {}).map(([column, elements]) => (
-                <div key={column} className="space-y-8" aria-label={`Content column ${column}`} data-pixelcoda-colpos={column}>
-                  <T3Renderer content={elements} />
-                </div>
-              ))}
-            </section>
-          </LayoutComponent>
+          <ContentLayout pageData={pageData} layoutId={layoutId} />
         )}
       </main>
       <HeadlessDevTools pageData={pageData} />

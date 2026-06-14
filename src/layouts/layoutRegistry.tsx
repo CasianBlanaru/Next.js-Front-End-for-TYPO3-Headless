@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 export interface LayoutRendererProps {
   title?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 function DefaultLayout({ children }: LayoutRendererProps) {

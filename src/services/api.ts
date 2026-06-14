@@ -1,10 +1,10 @@
 import { createFetch, type FetchOptions, type FetchContext, type FetchResponse } from 'ofetch';
 import { joinURL, cleanDoubleSlashes } from 'ufo';
 import { defu } from 'defu';
-import type { T3Site } from "@/types";
+import type { T3Site } from "@types";
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || 'https://api.pwa-demo.ddev.site';
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://pwa-demo.ddev.site';
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || '';
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || '';
 const defaultLocale = process.env.DEFAULT_LOCALE || 'en';
 const locales = (process.env.LOCALES || defaultLocale)
   .split(',')
@@ -23,7 +23,7 @@ export const t3SiteOptions: T3Site = {
     proxyHeaders: false,
     allowQuery: true,
     endpoints: {
-      initialData: process.env.NEXT_PUBLIC_INITIAL_DATA_ENDPOINT || '',
+      initialData: process.env.NEXT_PUBLIC_INITIAL_DATA_ENDPOINT || '/?type=834',
     },
   },
   i18n: {
