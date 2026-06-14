@@ -3,6 +3,11 @@ import { getSiteUrl } from './api';
 import { normalizeFileUrl } from './media';
 import type { T3Page } from '@types';
 
+function safeUrl(path: string, base?: string): string {
+  if (!base) return path;
+  try { return new URL(path, base).toString(); } catch { return path; }
+}
+
 function getCanonicalHref(pageData: T3Page | null, pathname: string): string {
   const SITE_URL = getSiteUrl();
   const canonical = pageData?.meta?.canonical;
@@ -10,11 +15,11 @@ function getCanonicalHref(pageData: T3Page | null, pathname: string): string {
   if (canonical && typeof canonical === 'object') {
     const href = 'href' in canonical ? canonical.href : undefined;
     const link = 'link' in canonical ? canonical.link : undefined;
-    if (typeof href === 'string') return new URL(href, SITE_URL).toString();
-    if (typeof link === 'string') return new URL(link, SITE_URL).toString();
+    if (typeof href === 'string') return safeUrl(href, SITE_URL);
+    if (typeof link === 'string') return safeUrl(link, SITE_URL);
   }
 
-  return new URL(pathname, SITE_URL).toString();
+  return safeUrl(pathname, SITE_URL);
 }
 
 export function getPageMetadata(pageData: T3Page | null, pathname: string): Metadata {
@@ -28,7 +33,7 @@ export function getPageMetadata(pageData: T3Page | null, pathname: string): Meta
   return {
     title,
     description,
-    metadataBase: new URL(SITE_URL),
+    metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
     alternates: {
       canonical,
     },

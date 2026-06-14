@@ -7,7 +7,7 @@ import { getSiteUrl } from '@services/api';
 export const metadata = {
   title: 'TYPO3 Headless Next.js Frontend',
   description: 'Standalone headless frontend for TYPO3 using Next.js App Router.',
-  metadataBase: new URL(getSiteUrl()),
+  metadataBase: getSiteUrl() ? new URL(getSiteUrl()) : undefined,
   icons: {
     icon: '/icons/icon.svg',
     apple: '/icons/icon.svg',
