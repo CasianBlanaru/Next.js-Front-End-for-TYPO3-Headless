@@ -11,8 +11,7 @@ interface HeadlessDevToolsProps {
 }
 
 const isEnabled = () =>
-  process.env.NODE_ENV !== 'production' &&
-  process.env.NEXT_PUBLIC_HEADLESS_DEVTOOLS !== 'false';
+  process.env.NEXT_PUBLIC_HEADLESS_DEVTOOLS === 'true';
 
 function flattenContent(pageData: T3Page) {
   return Object.entries(pageData.content ?? {}).flatMap(([column, elements]) =>

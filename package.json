@@ -1,6 +1,6 @@
 {
   "name": "nextjs-typo3",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -7,7 +7,7 @@ export function normalizeFileUrl(publicUrl?: string | null): string {
   const apiBaseUrl = getT3ApiBaseUrl();
   const siteUrl = getSiteUrl();
   const frontendFileApi = process.env.NEXT_PUBLIC_FRONTEND_FILE_API || '/headless/fileadmin';
-  const backendBaseUrl = process.env.NEXT_PUBLIC_TYPO3_BASE_URL || siteUrl;
+  const backendBaseUrl = process.env.NEXT_PUBLIC_TYPO3_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || siteUrl || '';
 
   function getOrigin(value: string): string {
     try {

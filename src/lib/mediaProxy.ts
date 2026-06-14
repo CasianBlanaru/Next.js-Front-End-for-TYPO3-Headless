@@ -1,6 +1,6 @@
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || 'https://pwa-demo.ddev.site/headless';
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || '';
 const frontendFileApi = process.env.NEXT_PUBLIC_FRONTEND_FILE_API || '/headless/fileadmin';
-const backendBaseUrl = process.env.NEXT_PUBLIC_TYPO3_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL || 'https://pwa-demo.ddev.site';
+const backendBaseUrl = process.env.NEXT_PUBLIC_TYPO3_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL || '';
 
 function getOrigin(value: string): string {
   try {

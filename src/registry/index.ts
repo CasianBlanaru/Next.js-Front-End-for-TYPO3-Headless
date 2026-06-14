@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import type { ComponentType } from "react";
 import componentMap from "@hooks/componentMap";
 import ComponentErrorBoundary from "@components/layout/ComponentErrorBoundary";
-import { getActiveSkin } from "@config/skin";
+import { getActiveSkin } from "../config/skin";
 
 export interface RegistryOptions {
   skin?: string;
