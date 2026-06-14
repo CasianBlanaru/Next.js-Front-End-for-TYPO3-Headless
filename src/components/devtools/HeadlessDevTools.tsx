@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import type { T3Page, T3ContentElement } from '@/types';
 import { getPixelcodaMeta } from '@/lib/pixelcoda';
 
@@ -44,6 +44,11 @@ function getMappedComponent(type: string) {
 }
 
 export default function HeadlessDevTools({ pageData }: HeadlessDevToolsProps) {
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<Panel>('inspector');
   const [selectedUid, setSelectedUid] = useState<number | null>(null);
@@ -55,7 +60,7 @@ export default function HeadlessDevTools({ pageData }: HeadlessDevToolsProps) {
   );
   const pageMeta = getPixelcodaMeta(pageData as unknown as Record<string, unknown>);
 
-  useEffect(() => {
+useEffect(() => {
     if (!isEnabled()) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -87,7 +92,7 @@ export default function HeadlessDevTools({ pageData }: HeadlessDevToolsProps) {
     return () => document.removeEventListener('click', onClick, true);
   }, []);
 
-  if (!isEnabled()) return null;
+  if (!isEnabled() || !mounted) return null;
 
   return (
     <div className="pixelcoda-devtools" aria-live="polite">
