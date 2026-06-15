@@ -1,13 +1,11 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import type { T3Page } from '@/types';
 import T3Renderer from '@components/layout/T3Renderer/T3Renderer';
 import ResponsiveContainer from '@components/layout/ResponsiveContainer/ResponsiveContainer';
 import { getColumnElements, getPixelcodaMeta } from '@/lib/pixelcoda';
 import { getLayoutComponent } from '@/layouts/layoutRegistry';
-
-const HeadlessDevTools = dynamic(() => import('@components/devtools/HeadlessDevTools'), { ssr: false });
+import DevToolsWrapper from '@components/devtools/DevToolsWrapper';
 
 interface PageContentProps {
   pageData: T3Page;
@@ -89,7 +87,7 @@ export default function PageContent({ pageData }: PageContentProps) {
           <ContentLayout pageData={pageData} layoutId={layoutId} />
         )}
       </main>
-      <HeadlessDevTools pageData={pageData} />
+      <DevToolsWrapper pageData={pageData} />
     </>
   );
 }

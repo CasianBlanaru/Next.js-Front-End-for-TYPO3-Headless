@@ -21,9 +21,11 @@ export function normalizeFileUrl(publicUrl?: string | null): string {
   const frontendFilePath = frontendFileApi.replace(/\/$/, '');
 
   if (/^https?:\/\//i.test(publicUrl)) {
+    // Already absolute — only rewrite if it's a raw /fileadmin/ path
+    // that needs the headless proxy prefix applied
     const url = new URL(publicUrl);
     const fileadminIndex = url.pathname.indexOf('/fileadmin/');
-    if (fileadminIndex >= 0) {
+    if (fileadminIndex >= 0 && !url.pathname.startsWith(frontendFilePath)) {
       return `${backendOrigin}${frontendFilePath}${url.pathname.slice(fileadminIndex + '/fileadmin'.length)}${url.search}`;
     }
     return publicUrl;
