@@ -26,24 +26,10 @@ const T3HtmlParser: React.FC<T3HtmlParserProps> = ({ content }) => {
     }, [router]);
 
     const navigate = useCallback((e: MouseEvent) => {
-        let target = e.target as HTMLElement;
-        let i = 0;
-
-        while (
-            i < 5 &&
-            !(target instanceof HTMLAnchorElement) &&
-            target &&
-            target.parentNode
-        ) {
-            target = target.parentNode as HTMLElement;
-            i++;
+        const target = (e.target as HTMLElement).closest('a');
+        if (target) {
+            redirect(e, target);
         }
-
-        if (!(target instanceof HTMLAnchorElement)) {
-            return;
-        }
-
-        redirect(e, target);
     }, [redirect]);
 
     const addListeners = useCallback(() => {
