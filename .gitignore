@@ -20,6 +20,7 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+__MACOSX/
 
 # Editor
 .idea/
@@ -38,6 +39,7 @@ pnpm-debug.log*
 *.log
 *.pid
 *.seed
+*.gz
 
 # Coverage
 coverage/
@@ -48,3 +50,6 @@ dist/
 .cache-loader/
 .eslintcache
 *.tsbuildinfo
+
+# Pack output
+*.tgz

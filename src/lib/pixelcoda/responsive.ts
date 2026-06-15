@@ -26,6 +26,9 @@ const gridColumns = (preset?: string): string => {
       return 'grid-cols-4';
     case '4-4-4':
       return 'grid-cols-3';
+    case '6':
+    case '2-2-2-2-2-2':
+      return 'grid-cols-6';
     case '6-6':
     case '8-4':
     case '4-8':

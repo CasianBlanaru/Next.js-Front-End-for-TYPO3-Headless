@@ -1,2 +1,7 @@
-// Jest setup file for frontend tests.
-// Add global mocks or test utilities here as needed.
+jest.mock('next/dynamic', () => {
+  return () => {
+    const DynamicComponent = () => null;
+    DynamicComponent.displayName = 'DynamicMock';
+    return DynamicComponent;
+  };
+});

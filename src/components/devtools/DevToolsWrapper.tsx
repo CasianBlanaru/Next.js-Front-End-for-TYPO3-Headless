@@ -3,6 +3,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import type { T3Page } from '@/types';
+import { isDevToolsEnabled } from './devtoolsConfig';
 
 /**
  * Client-side wrapper for HeadlessDevTools.
@@ -10,7 +11,7 @@ import type { T3Page } from '@/types';
  */
 const HeadlessDevTools = dynamic(
   () => import('@components/devtools/HeadlessDevTools'),
-  { ssr: false }
+  { ssr: false },
 );
 
 interface DevToolsWrapperProps {
@@ -18,7 +19,7 @@ interface DevToolsWrapperProps {
 }
 
 export default function DevToolsWrapper({ pageData }: DevToolsWrapperProps) {
-  if (process.env.NEXT_PUBLIC_HEADLESS_DEVTOOLS !== 'true') {
+  if (!isDevToolsEnabled()) {
     return null;
   }
   return <HeadlessDevTools pageData={pageData} />;

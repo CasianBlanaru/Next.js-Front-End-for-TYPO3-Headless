@@ -1,31 +1,74 @@
 {
-  "name": "nextjs-typo3",
-  "version": "1.0.0-alpha",
-  "private": true,
+  "name": "@pixelcoda/headless-nextjs",
+  "version": "1.0.0-alpha.1",
+  "description": "Production-ready Next.js App Router frontend framework for TYPO3 Headless with PixelCoda compatibility",
+  "type": "module",
+  "author": "Casian Blanaru",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git"
+  },
+  "homepage": "https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless#readme",
+  "bugs": {
+    "url": "https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless/issues"
+  },
+  "keywords": [
+    "typo3",
+    "headless",
+    "nextjs",
+    "pixelcoda",
+    "frontend",
+    "react",
+    "app-router",
+    "typo3-headless"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles": "./src/styles/globals.css"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsup",
+    "build:app": "next build",
     "start": "next start",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests --testPathIgnorePatterns=e2e",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "prepack": "yarn build"
+  },
+  "peerDependencies": {
+    "next": ">=15.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.20",
     "axios": "^1.17.0",
     "defu": "^6.1.7",
-    "next": "^16.2.7",
     "ofetch": "^1.5.1",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
     "ufo": "^1.6.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
-    "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/typography": "^0.5.20",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.14.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
@@ -38,9 +81,13 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.0",
+    "next": "^16.2.7",
     "postcss": "^8.4.47",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tailwindcss": "^3.4.14",
+    "ts-jest": "^29.4.0",
+    "tsup": "^8.5.0",
     "typescript": "^6.0.3"
-  },
-  "license": "MIT"
+  }
 }

@@ -3,15 +3,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { T3Page, T3ContentElement } from '@/types';
 import { getPixelcodaMeta } from '@/lib/pixelcoda';
+import { isDevToolsEnabled } from './devtoolsConfig';
 
 type Panel = 'inspector' | 'json' | 'layout' | 'api' | 'mapping';
 
 interface HeadlessDevToolsProps {
   pageData: T3Page;
 }
-
-const isEnabled = () =>
-  process.env.NEXT_PUBLIC_HEADLESS_DEVTOOLS === 'true';
 
 function flattenContent(pageData: T3Page) {
   return Object.entries(pageData.content ?? {}).flatMap(([column, elements]) =>
@@ -56,7 +54,7 @@ export default function HeadlessDevTools({ pageData }: HeadlessDevToolsProps) {
   const pageMeta = getPixelcodaMeta(pageData as unknown as Record<string, unknown>);
 
 useEffect(() => {
-    if (!isEnabled()) return;
+    if (!isDevToolsEnabled()) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       const modifier = event.metaKey || event.ctrlKey;
@@ -71,7 +69,7 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    if (!isEnabled()) return;
+    if (!isDevToolsEnabled()) return;
 
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
@@ -87,7 +85,7 @@ useEffect(() => {
     return () => document.removeEventListener('click', onClick, true);
   }, []);
 
-  if (!isEnabled()) return null;
+  if (!isDevToolsEnabled()) return null;
 
   return (
     <div className="pixelcoda-devtools" aria-live="polite">
