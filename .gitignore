@@ -50,6 +50,7 @@ dist/
 .cache-loader/
 .eslintcache
 *.tsbuildinfo
+*.tgz
 
 # Pack output
 *.tgz
