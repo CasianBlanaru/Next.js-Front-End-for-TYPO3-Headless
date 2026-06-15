@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { T3Page, T3ContentElement } from '@/types';
 import { getPixelcodaMeta } from '@/lib/pixelcoda';
 
@@ -44,11 +44,6 @@ function getMappedComponent(type: string) {
 }
 
 export default function HeadlessDevTools({ pageData }: HeadlessDevToolsProps) {
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<Panel>('inspector');
   const [selectedUid, setSelectedUid] = useState<number | null>(null);
@@ -92,7 +87,7 @@ useEffect(() => {
     return () => document.removeEventListener('click', onClick, true);
   }, []);
 
-  if (!isEnabled() || !mounted) return null;
+  if (!isEnabled()) return null;
 
   return (
     <div className="pixelcoda-devtools" aria-live="polite">
