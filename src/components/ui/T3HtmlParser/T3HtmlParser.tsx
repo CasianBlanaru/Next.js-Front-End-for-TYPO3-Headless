@@ -10,7 +10,7 @@ interface T3HtmlParserProps {
 const T3HtmlParser: React.FC<T3HtmlParserProps> = ({ content }) => {
     const htmlParserRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
-    const linksRef = useRef<HTMLCollectionOf<HTMLAnchorElement> | null>(null);
+    const linksRef = useRef<NodeListOf<HTMLAnchorElement> | null>(null);
 
     const redirect = useCallback((e: MouseEvent, target: HTMLAnchorElement) => {
         const href = target.getAttribute("href");
@@ -34,8 +34,8 @@ const T3HtmlParser: React.FC<T3HtmlParserProps> = ({ content }) => {
 
     const addListeners = useCallback(() => {
         // Query all anchor tags within the parsed HTML content
-        const links = htmlParserRef.current?.querySelectorAll('a');
-        linksRef.current = links ? (links as HTMLCollectionOf<HTMLAnchorElement>) : null;
+        const links = htmlParserRef.current?.querySelectorAll<HTMLAnchorElement>('a');
+        linksRef.current = links || null;
         linksRef.current?.forEach(link => link.addEventListener('click', navigate));
     }, [navigate]);
 
