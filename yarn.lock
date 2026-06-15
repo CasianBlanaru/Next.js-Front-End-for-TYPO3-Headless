@@ -1520,7 +1520,10 @@ __metadata:
     "@playwright/test": "npm:^1.60.0"
     "@tailwindcss/forms": "npm:^0.5.11"
     "@tailwindcss/typography": "npm:^0.5.20"
+<<<<<<< HEAD
     "@types/jest": "npm:^30.0.0"
+=======
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
     "@types/node": "npm:^20.14.0"
     "@types/react": "npm:^19.2.17"
     "@types/react-dom": "npm:^19.2.3"
@@ -1541,8 +1544,11 @@ __metadata:
     react: "npm:^19.2.7"
     react-dom: "npm:^19.2.7"
     tailwindcss: "npm:^3.4.14"
+<<<<<<< HEAD
     ts-jest: "npm:^29.4.0"
     tsup: "npm:^8.5.0"
+=======
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
     typescript: "npm:^6.0.3"
     ufo: "npm:^1.6.4"
   peerDependencies:
