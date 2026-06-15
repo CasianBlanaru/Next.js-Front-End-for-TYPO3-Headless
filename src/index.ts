@@ -20,9 +20,12 @@ export type {
   PixelcodaHeadlessMeta,
   PixelcodaContainerColumn,
   PixelcodaResponsiveSettings,
+<<<<<<< HEAD
   PixelcodaGapPreset,
   PixelcodaWidthPreset,
   PixelcodaOrderSettings,
+=======
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
 } from './types/pixelcoda';
 
 // ── Config ───────────────────────────────────────────────────────────────────
@@ -37,7 +40,11 @@ export { getPageData, getPageBySlug, getHomepageData } from './services/pages';
 export { getSitemapRoutes, getNavigation } from './services/navigation';
 export { getNewsList, getNewsDetail } from './services/news';
 
+<<<<<<< HEAD
 // ── Lib / PixelCoda Compatibility Layer ──────────────────────────────────────
+=======
+// ── Lib ───────────────────────────────────────────────────────────────────────
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
 export { getPixelcodaMeta, getColumnElements } from './lib/pixelcoda/normalize';
 export {
   getResponsiveGridClasses,
@@ -48,12 +55,21 @@ export {
 export { normalizeFileUrl as normalizeProxyUrl } from './lib/mediaProxy';
 export { createPreviewContext, isPreviewMode, buildPreviewQuery } from './lib/preview';
 
+<<<<<<< HEAD
 // ── Component Registry ────────────────────────────────────────────────────────
 export { getComponent, DynamicComponentRenderer } from './registry/index';
 export type { RegistryOptions } from './registry/index';
 
 // ── Layout Registry ───────────────────────────────────────────────────────────
 export { getLayoutComponent, default as layoutRegistry } from './layouts/layoutRegistry';
+=======
+// ── Registry ──────────────────────────────────────────────────────────────────
+export { getComponent, DynamicComponentRenderer } from './registry/index';
+export type { RegistryOptions } from './registry/index';
+
+// ── Layouts ───────────────────────────────────────────────────────────────────
+export { getLayoutComponent } from './layouts/layoutRegistry';
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
 export type { LayoutRendererProps, LayoutIdentifier } from './layouts/layoutRegistry';
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────
@@ -63,13 +79,18 @@ export { useT3Options } from './hooks/useT3Options';
 export { useT3Utils } from './hooks/useT3Utils';
 export { useT3i18n } from './hooks/useT3i18n';
 
+<<<<<<< HEAD
 // ── Layout Components ─────────────────────────────────────────────────────────
+=======
+// ── Components — Layout ───────────────────────────────────────────────────────
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
 export { default as ResponsiveContainer } from './components/layout/ResponsiveContainer/ResponsiveContainer';
 export { default as T3Renderer } from './components/layout/T3Renderer/T3Renderer';
 export { default as PageContent } from './components/layout/PageContent';
 export { default as T3Frame } from './components/layout/T3Frame/T3Frame';
 export { default as ComponentErrorBoundary } from './components/layout/ComponentErrorBoundary';
 
+<<<<<<< HEAD
 // ── Media Components ──────────────────────────────────────────────────────────
 export { default as Typo3Image } from './components/media/Typo3Image';
 export { default as MediaFile } from './components/media/MediaFile/MediaFile';
@@ -95,6 +116,21 @@ export {
 export { defaultSkin } from './skins/default';
 
 // ── Content Components ────────────────────────────────────────────────────────
+=======
+// ── Components — Media ────────────────────────────────────────────────────────
+export { default as Typo3Image } from './components/media/Typo3Image';
+export { default as MediaFile } from './components/media/MediaFile/MediaFile';
+
+// ── Components — Navigation ───────────────────────────────────────────────────
+export { default as T3Link } from './components/navigation/T3Link/T3Link';
+export { default as T3LocaleSwitcher } from './components/navigation/T3LocaleSwitcher/T3LocaleSwitcher';
+
+// ── Components — DevTools ─────────────────────────────────────────────────────
+export { default as HeadlessDevTools } from './components/devtools/HeadlessDevTools';
+export { default as DevToolsWrapper } from './components/devtools/DevToolsWrapper';
+
+// ── Components — Content ──────────────────────────────────────────────────────
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
 export { default as T3CeText } from './components/content/T3CeText/T3CeText';
 export { default as T3CeHeader } from './components/content/T3CeHeader/T3CeHeader';
 export { default as T3CeImage } from './components/content/T3CeImage/T3CeImage';

@@ -2,12 +2,19 @@
   "name": "@pixelcoda/headless-nextjs",
   "version": "1.0.0-alpha.1",
   "description": "Production-ready Next.js App Router frontend framework for TYPO3 Headless with PixelCoda compatibility",
+<<<<<<< HEAD
   "type": "module",
+=======
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   "author": "Casian Blanaru",
   "license": "MIT",
   "repository": {
     "type": "git",
+<<<<<<< HEAD
     "url": "git@github.com:CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git"
+=======
+    "url": "git+https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git"
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   },
   "homepage": "https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless#readme",
   "bugs": {
@@ -23,6 +30,7 @@
     "app-router",
     "typo3-headless"
   ],
+<<<<<<< HEAD
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -42,6 +50,31 @@
   "sideEffects": [
     "**/*.css"
   ],
+=======
+  "files": [
+    "src/",
+    "public/",
+    ".env.example",
+    "next.config.js",
+    "tsconfig.json",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./components/*": "./src/components/*",
+    "./services/*": "./src/services/*",
+    "./lib/*": "./src/lib/*",
+    "./hooks/*": "./src/hooks/*",
+    "./types": "./src/types/index.ts",
+    "./config/*": "./src/config/*",
+    "./layouts/*": "./src/layouts/*",
+    "./registry": "./src/registry/index.ts",
+    "./styles": "./src/styles/globals.css"
+  },
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   "scripts": {
     "dev": "next dev",
     "build": "tsup",
@@ -51,7 +84,11 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests --testPathIgnorePatterns=e2e",
     "e2e": "playwright test",
+<<<<<<< HEAD
     "prepack": "yarn build"
+=======
+    "pack:dry": "npm pack --dry-run"
+>>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   },
   "peerDependencies": {
     "next": ">=15.0.0",
