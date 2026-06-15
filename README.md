@@ -1,154 +1,80 @@
-# Next.js Front-End for TYPO3 Headless
+# @pixelcoda/headless-nextjs
 
-Production-ready headless front-end built on Next.js App Router with TYPO3 Headless and PixelCoda Headless foundations.
+Production-ready Next.js App Router frontend framework for TYPO3 Headless.
+
+Built on [TYPO3 Headless](https://github.com/TYPO3-Initiatives/headless) with full [PixelCoda Headless](https://pixelcoda.de) compatibility.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+---
+
+## Installation
+
+```bash
+yarn add @pixelcoda/headless-nextjs
+```
+
+Peer dependencies:
+
+```bash
+yarn add next react react-dom
+```
 
 ---
 
 ## Quick Start
 
-### Prerequisites
-
-- [DDEV](https://ddev.readthedocs.io/) installed
-- Node.js 20+
-- Yarn 1.x
-
-### Installation
+### 1. Create a Next.js project
 
 ```bash
-ddev start
-cp front/.env.example front/.env.local
-ddev exec "cd front && yarn install"
+yarn create next-app my-headless-site --typescript --app
+cd my-headless-site
+yarn add @pixelcoda/headless-nextjs
 ```
 
-Import the database dump if available:
+### 2. Configure environment variables
+
+Copy `.env.example` to `.env.local` and adjust values:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://your-typo3-api.example.com
+NEXT_PUBLIC_TYPO3_BASE_URL=https://your-typo3-api.example.com
+NEXT_PUBLIC_BASE_URL=https://your-frontend.example.com
+NEXT_PUBLIC_SKIN=premium
+NEXT_PUBLIC_HEADLESS_DEVTOOLS=true
+```
+
+### 3. Render TYPO3 content
+
+```tsx
+import { getPageBySlug, PageContent } from '@pixelcoda/headless-nextjs';
+
+export default async function Page({ params }: { params: { slug?: string[] } }) {
+  const slug = params.slug?.join('/') ?? '/';
+  const pageData = await getPageBySlug(slug);
+
+  return <PageContent pageData={pageData} />;
+}
+```
+
+### 4. Start development
 
 ```bash
-ddev import-db --file ./data/db.sql.gz
+yarn dev
 ```
 
-### Development
-
-```bash
-ddev exec "cd front && yarn dev"
-```
-
-### Production Build
-
-```bash
-ddev exec "cd front && yarn build"
-ddev exec "cd front && yarn start"
-```
-
----
-
-## Environment Variables
-
-Copy `front/.env.example` to `front/.env.local` and adjust values.
-
-| Variable | Description | Default |
-| --- | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | TYPO3 Headless API endpoint | `https://api.nextjs-demo.ddev.site` |
-| `NEXT_PUBLIC_TYPO3_BASE_URL` | TYPO3 backend origin | `https://api.nextjs-demo.ddev.site` |
-| `NEXT_PUBLIC_BASE_URL` | Frontend public URL | `https://nextjs-demo.ddev.site` |
-| `NEXT_PUBLIC_FRONTEND_FILE_API` | Fileadmin proxy path | `/headless/fileadmin` |
-| `NEXT_PUBLIC_SKIN` | Active skin (`premium` or `default`) | `premium` |
-| `NEXT_PUBLIC_HEADLESS_DEVTOOLS` | Enable DevTools overlay (`true`/`false`) | `true` |
-| `NEXT_PUBLIC_REVALIDATE_SECONDS` | ISR revalidation interval | `60` |
-| `REVALIDATE_SECRET` | Token for on-demand revalidation | `change-me` |
-| `DEFAULT_LOCALE` | Default locale | `en` |
-| `LOCALES` | Comma-separated locales | `en,de,pl` |
-
----
-
-## Validation
-
-```bash
-ddev exec "cd front && yarn lint"
-ddev exec "cd front && yarn typecheck"
-ddev exec "cd front && yarn test"
-ddev exec "cd front && yarn build"
-```
-
-Optional browser tests (requires Playwright):
-
-```bash
-ddev exec "cd front && npx playwright install --with-deps"
-ddev exec "cd front && yarn e2e"
-```
-
----
-
-## Premium Skin
-
-The multi-skin system is configured via `NEXT_PUBLIC_SKIN`.
-
-- `premium` — production skin with enhanced components
-- `default` — baseline skin
-
-When `NEXT_PUBLIC_SKIN=premium`, the system resolves components from `src/skins/premium/`. If a component is not found there, it automatically falls back to `src/skins/default/`.
-
-Premium components:
-
-- `PremiumLayout`
-- `PremiumHero`
-- `PremiumFeatureGrid`
-- `PremiumNewsList`
-- `PremiumCTA`
-
----
-
-## Headless DevTools
-
-Activate with:
-
-- `CMD + SHIFT + H` (macOS)
-- `CTRL + SHIFT + H` (Windows / Linux)
-
-Or click the **Headless DevTools** button in the bottom-right corner.
-
-Panels:
-
-| Panel | Description |
-| --- | --- |
-| Inspector | List all TYPO3 content elements on the page. Click to inspect. |
-| JSON | Raw JSON for the selected element or full page response. |
-| Layout | Backend layout, PixelCoda layout metadata, width, and gap. |
-| API | Page ID, slug, language entries, and full page JSON. |
-| Mapping | TYPO3 content type → React component mapping and status. |
-
-DevTools are controlled by `NEXT_PUBLIC_HEADLESS_DEVTOOLS=true`. They can be enabled in any environment, including production.
-
----
-
-## Responsive Container System
-
-The `ResponsiveContainer` component supports flexible grid layouts driven by PixelCoda metadata.
-
-Supported column presets:
-
-| Preset | Columns |
-| --- | --- |
-| `12` | 1 column (full width) |
-| `6-6` | 2 columns |
-| `4-4-4` | 3 columns |
-| `3-3-3-3` | 4 columns |
-| `8-4` / `4-8` | 2 columns (asymmetric) |
-| `9-3` / `3-9` | 2 columns (sidebar) |
-
-Breakpoints: `mobile`, `tablet`, `desktop`.
-
-Width presets: `narrow`, `contained`, `wide`, `full`.
-
-Gap presets: `none`, `xs`, `sm`, `md`, `lg`, `xl`.
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
 ## TYPO3 Headless Integration
 
-TYPO3 content elements are fetched from the Headless API and rendered by mapped React components.
+The framework fetches all content from the TYPO3 Headless JSON API and renders it using mapped React components.
+
+### Content element mapping
 
 | TYPO3 type | Component |
-| --- | --- |
+|---|---|
 | `text` | `T3CeText` |
 | `textpic` / `textmedia` | `T3CeTextpic` |
 | `image` | `T3CeImage` |
@@ -156,10 +82,8 @@ TYPO3 content elements are fetched from the Headless API and rendered by mapped 
 | `table` | `T3CeTable` |
 | `uploads` | `T3CeUploads` |
 | `bullets` | `T3CeBullets` |
-| `shortcut` | `T3CeShortcut` |
 | `menu_pages` | `T3CeMenuPages` |
 | `menu_subpages` | `T3CeMenuSubpages` |
-| `menu_sitemap_pages` | `T3CeMenuSitemapPages` |
 | `news_list` | `T3CeNewsList` |
 | `news_detail` | `T3CeNewsDetail` |
 
@@ -171,18 +95,18 @@ Images are resolved in priority order:
 2. `publicUrl`
 3. `originalUrl`
 
-All URLs are normalized through `src/services/media.ts` using `NEXT_PUBLIC_TYPO3_BASE_URL` and `NEXT_PUBLIC_FRONTEND_FILE_API`.
+All URLs pass through `normalizeFileUrl()` which applies the `NEXT_PUBLIC_FRONTEND_FILE_API` proxy prefix.
 
 ---
 
 ## PixelCoda Headless Compatibility
 
-The project is forward-compatible with `pixelcoda_headless` TYPO3 extension metadata without requiring it.
+The framework is forward-compatible with `pixelcoda_headless` TYPO3 extension metadata without requiring it.
 
-Supported metadata fields (auto-detected from page response):
+Supported metadata (auto-detected from page response):
 
 | Field | Description |
-| --- | --- |
+|---|---|
 | `layout.identifier` | Backend layout override |
 | `container.columns` | Column definitions for ResponsiveContainer |
 | `responsive` | Per-breakpoint grid settings |
@@ -192,55 +116,225 @@ Supported metadata fields (auto-detected from page response):
 | `preview` | Preview mode flag |
 | `visibility` | Element visibility rules |
 
----
+Missing metadata is handled gracefully with sensible defaults.
 
-## On-Demand Revalidation
+```ts
+import { getPixelcodaMeta, getColumnElements } from '@pixelcoda/headless-nextjs';
 
-With `REVALIDATE_SECRET` set, trigger revalidation:
-
-```bash
-# Revalidate a path
-curl -X POST "https://nextjs-demo.ddev.site/api/revalidate" \
-  -H "Authorization: Bearer change-me" \
-  -H "Content-Type: application/json" \
-  -d '{"path":"/"}'
-
-# Revalidate by cache tag
-curl -X POST "https://nextjs-demo.ddev.site/api/revalidate" \
-  -H "Authorization: Bearer change-me" \
-  -H "Content-Type: application/json" \
-  -d '{"tags":["typo3"]}'
+const meta = getPixelcodaMeta(pageData);
+const columns = getColumnElements(pageData, meta);
 ```
 
 ---
 
-## Troubleshooting
+## Premium Skin
 
-**`ERR_CONNECTION_RESET`**
+Set `NEXT_PUBLIC_SKIN=premium` to activate the Premium Skin.
 
-```bash
-ddev restart
-ddev exec "cd front && yarn dev"
+The skin system resolves components in order:
+
+1. `src/skins/premium/` — premium override
+2. Default component map — automatic fallback
+
+If a component is not found in the premium skin, the default implementation is used automatically.
+
+Premium components:
+
+- `PremiumLayout`
+- `PremiumHero`
+- `PremiumFeatureGrid`
+- `PremiumNewsList`
+- `PremiumCTA`
+
+Register additional premium overrides in `src/registry/index.ts`:
+
+```ts
+const skinOverrides = {
+  premium: {
+    header: PremiumHero,
+    news_list: PremiumNewsList,
+  },
+};
 ```
 
-**`ddev import-db` fails**
+---
 
-Check if the dump exists:
+## Headless DevTools
 
-```bash
-ls -lah ./data/db.sql.gz
+Enable with `NEXT_PUBLIC_HEADLESS_DEVTOOLS=true`.
+
+Open with:
+
+- `CMD + SHIFT + H` (macOS)
+- `CTRL + SHIFT + H` (Windows / Linux)
+
+Or click the **Headless DevTools** button in the bottom-right corner.
+
+| Panel | Description |
+|---|---|
+| Inspector | List all content elements. Click to inspect. |
+| JSON | Raw JSON for the selected element or full page. |
+| Layout | Backend layout, PixelCoda metadata, width, gap. |
+| API | Page ID, slug, language entries, full page JSON. |
+| Mapping | TYPO3 type → React component map and status. |
+
+DevTools are disabled in production unless explicitly enabled.
+
+---
+
+## Responsive Container System
+
+`ResponsiveContainer` renders TYPO3 content columns as a responsive CSS grid.
+
+### Column presets
+
+| Preset | Layout |
+|---|---|
+| `12` | 1 column |
+| `6-6` | 2 equal columns |
+| `4-4-4` | 3 equal columns |
+| `3-3-3-3` | 4 equal columns |
+| `8-4` / `4-8` | Asymmetric 2 columns |
+| `9-3` / `3-9` | Sidebar layout |
+
+### Breakpoints
+
+`mobile` → `tablet` → `desktop`
+
+### Width presets
+
+`narrow` · `contained` · `wide` · `full`
+
+### Gap presets
+
+`none` · `xs` · `sm` · `md` · `lg` · `xl`
+
+```tsx
+import { ResponsiveContainer } from '@pixelcoda/headless-nextjs';
+
+<ResponsiveContainer
+  columns={meta.container?.columns}
+  responsive={meta.responsive}
+  gap={meta.spacing?.gap}
+  width={meta.width}
+>
+  {children}
+</ResponsiveContainer>
 ```
 
-If missing, skip the import. It is not required to run the front-end.
+---
 
-**Build fails after moving files**
+## Environment Variables
+
+| Variable | Description | Default |
+|---|---|---|
+| `NEXT_PUBLIC_API_BASE_URL` | TYPO3 Headless API endpoint | — |
+| `NEXT_PUBLIC_TYPO3_BASE_URL` | TYPO3 backend origin (for media) | — |
+| `NEXT_PUBLIC_BASE_URL` | Frontend public URL | — |
+| `NEXT_PUBLIC_FRONTEND_FILE_API` | Fileadmin proxy path | `/headless/fileadmin` |
+| `NEXT_PUBLIC_SKIN` | Active skin (`premium` or `default`) | `default` |
+| `NEXT_PUBLIC_HEADLESS_DEVTOOLS` | Enable DevTools (`true`/`false`) | `false` in production |
+| `NEXT_PUBLIC_REVALIDATE_SECONDS` | ISR revalidation interval | `60` |
+| `REVALIDATE_SECRET` | Token for on-demand revalidation | — |
+| `DEFAULT_LOCALE` | Default locale | `en` |
+| `LOCALES` | Comma-separated locales | `en` |
+
+---
+
+## Package Exports
+
+Import from `@pixelcoda/headless-nextjs`:
+
+```ts
+import {
+  // Layout
+  ResponsiveContainer,
+  T3Renderer,
+  PageContent,
+
+  // Media
+  Typo3Image,
+  MediaFile,
+
+  // DevTools
+  HeadlessDevTools,
+  DevToolsWrapper,
+  isDevToolsEnabled,
+
+  // Premium Skin
+  PremiumHero,
+  PremiumLayout,
+
+  // Services
+  t3Fetch,
+  normalizeFileUrl,
+  getPageBySlug,
+  getPageMetadata,
+
+  // PixelCoda
+  getPixelcodaMeta,
+  getColumnElements,
+  getResponsiveGridClasses,
+
+  // Registry
+  getComponent,
+  getLayoutComponent,
+  componentMap,
+
+  // Config
+  getActiveSkin,
+  isPremiumSkin,
+} from '@pixelcoda/headless-nextjs';
+```
+
+Styles:
+
+```ts
+import '@pixelcoda/headless-nextjs/styles';
+```
+
+---
+
+## Deployment
+
+### Production build
 
 ```bash
-ddev exec "cd front && rm -rf .next && yarn build"
+yarn build:app
+yarn start
+```
+
+### On-demand revalidation
+
+```bash
+curl -X POST "https://your-frontend.example.com/api/revalidate" \
+  -H "Authorization: Bearer YOUR_REVALIDATE_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"path": "/"}'
+```
+
+Revalidate by cache tag:
+
+```bash
+curl -X POST "https://your-frontend.example.com/api/revalidate" \
+  -H "Authorization: Bearer YOUR_REVALIDATE_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"tags": ["typo3"]}'
+```
+
+---
+
+## Validation
+
+```bash
+yarn lint
+yarn typecheck
+yarn test
+yarn build
 ```
 
 ---
 
 ## License
 
-MIT
+MIT © [Casian Blanaru](https://github.com/CasianBlanaru)

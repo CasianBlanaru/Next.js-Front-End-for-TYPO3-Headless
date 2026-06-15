@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { getActiveSkin } from '../config/skin';
+import PremiumLayout from '../skins/premium/PremiumLayout';
 
 export interface LayoutRendererProps {
   title?: string;
@@ -31,6 +33,7 @@ function SidebarRightLayout({ children }: LayoutRendererProps) {
 
 const layoutRegistry = {
   default: DefaultLayout,
+  premium: PremiumLayout,
   'one-column': OneColumnLayout,
   'two-column': TwoColumnLayout,
   'three-column': ThreeColumnLayout,
@@ -44,6 +47,14 @@ export type LayoutIdentifier = keyof typeof layoutRegistry | string;
 
 export function getLayoutComponent(identifier?: LayoutIdentifier) {
   const normalized = identifier?.toLowerCase().trim() ?? 'default';
+  const activeSkin = getActiveSkin();
+
+  if (activeSkin === 'premium') {
+    const premiumLayout = layoutRegistry[normalized as keyof typeof layoutRegistry];
+    if (premiumLayout) return premiumLayout;
+    return layoutRegistry.premium;
+  }
+
   return layoutRegistry[normalized as keyof typeof layoutRegistry] ?? layoutRegistry.default;
 }
 

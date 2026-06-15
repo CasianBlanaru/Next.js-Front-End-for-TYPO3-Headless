@@ -2,7 +2,7 @@ import React from 'react';
 import type { T3File } from '@/types';
 
 
-interface MediaYoutubeProps {
+export interface MediaYoutubeProps {
   file: T3File;
   className?: string;
   staticClass?: string;

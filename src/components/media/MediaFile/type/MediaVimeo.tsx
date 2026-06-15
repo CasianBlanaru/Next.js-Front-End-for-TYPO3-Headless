@@ -3,7 +3,7 @@
 import React from "react";
 import type { T3File } from "@/types";
 
-interface MediaVimeoProps
+export interface MediaVimeoProps
     extends React.IframeHTMLAttributes<HTMLIFrameElement> {
     file: T3File;
     className?: string;
