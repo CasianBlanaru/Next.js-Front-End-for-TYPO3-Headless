@@ -2,19 +2,17 @@
   "name": "@pixelcoda/headless-nextjs",
   "version": "1.0.0-alpha.1",
   "description": "Production-ready Next.js App Router frontend framework for TYPO3 Headless with PixelCoda compatibility",
-<<<<<<< HEAD
-  "type": "module",
-=======
->>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   "author": "Casian Blanaru",
   "license": "MIT",
   "repository": {
     "type": "git",
-<<<<<<< HEAD
-    "url": "git@github.com:CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git"
-=======
     "url": "git+https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git"
->>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   },
   "homepage": "https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless#readme",
   "bugs": {
@@ -30,65 +28,68 @@
     "app-router",
     "typo3-headless"
   ],
-<<<<<<< HEAD
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    ".env.example"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./styles": "./src/styles/globals.css"
-  },
-  "sideEffects": [
-    "**/*.css"
-  ],
-=======
-  "files": [
-    "src/",
-    "public/",
-    ".env.example",
-    "next.config.js",
-    "tsconfig.json",
-    "tailwind.config.js",
-    "postcss.config.js",
+    "dist/",
     "README.md",
     "LICENSE"
   ],
   "exports": {
-    ".": "./src/index.ts",
-    "./components/*": "./src/components/*",
-    "./services/*": "./src/services/*",
-    "./lib/*": "./src/lib/*",
-    "./hooks/*": "./src/hooks/*",
-    "./types": "./src/types/index.ts",
-    "./config/*": "./src/config/*",
-    "./layouts/*": "./src/layouts/*",
-    "./registry": "./src/registry/index.ts",
-    "./styles": "./src/styles/globals.css"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.mjs",
+      "require": "./dist/components/*.js"
+    },
+    "./services/*": {
+      "types": "./dist/services/*.d.ts",
+      "import": "./dist/services/*.mjs",
+      "require": "./dist/services/*.js"
+    },
+    "./lib/*": {
+      "types": "./dist/lib/*.d.ts",
+      "import": "./dist/lib/*.mjs",
+      "require": "./dist/lib/*.js"
+    },
+    "./hooks/*": {
+      "types": "./dist/hooks/*.d.ts",
+      "import": "./dist/hooks/*.mjs",
+      "require": "./dist/hooks/*.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    },
+    "./config/*": {
+      "types": "./dist/config/*.d.ts",
+      "import": "./dist/config/*.mjs",
+      "require": "./dist/config/*.js"
+    },
+    "./layouts/*": {
+      "types": "./dist/layouts/*.d.ts",
+      "import": "./dist/layouts/*.mjs",
+      "require": "./dist/layouts/*.js"
+    },
+    "./registry": {
+      "types": "./dist/registry/index.d.ts",
+      "import": "./dist/registry/index.mjs",
+      "require": "./dist/registry/index.js"
+    },
+    "./styles": "./dist/styles/globals.css"
   },
->>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   "scripts": {
     "dev": "next dev",
-    "build": "tsup",
-    "build:app": "next build",
+    "build": "tsup src/index.ts --format cjs,esm --dts --outDir dist && next build",
     "start": "next start",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests --testPathIgnorePatterns=e2e",
     "e2e": "playwright test",
-<<<<<<< HEAD
-    "prepack": "yarn build"
-=======
     "pack:dry": "npm pack --dry-run"
->>>>>>> 60a14d9 (chore: prepare release v1.0.0-alpha.1 and sync changes)
   },
   "peerDependencies": {
     "next": ">=15.0.0",
@@ -100,12 +101,16 @@
     "@tailwindcss/typography": "^0.5.20",
     "axios": "^1.17.0",
     "defu": "^6.1.7",
+    "next": "^16.2.7",
     "ofetch": "^1.5.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "ufo": "^1.6.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0",
-    "@types/jest": "^30.0.0",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20.14.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
@@ -118,13 +123,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.0",
-    "next": "^16.2.7",
     "postcss": "^8.4.47",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
     "tailwindcss": "^3.4.14",
-    "ts-jest": "^29.4.0",
-    "tsup": "^8.5.0",
+    "tsup": "^8.0.0",
     "typescript": "^6.0.3"
   }
 }

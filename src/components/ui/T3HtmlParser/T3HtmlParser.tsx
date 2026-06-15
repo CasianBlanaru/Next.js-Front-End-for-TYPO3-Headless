@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 interface T3HtmlParserProps {
     content: string;
@@ -8,6 +9,7 @@ interface T3HtmlParserProps {
 
 const T3HtmlParser: React.FC<T3HtmlParserProps> = ({ content }) => {
     const htmlParserRef = useRef<HTMLDivElement | null>(null);
+    const router = useRouter();
     const linksRef = useRef<HTMLCollectionOf<HTMLAnchorElement> | null>(null);
 
     const redirect = useCallback((e: MouseEvent, target: HTMLAnchorElement) => {
@@ -19,11 +21,9 @@ const T3HtmlParser: React.FC<T3HtmlParserProps> = ({ content }) => {
 
         if (href && href[0] === "/" && !openInNewTab) {
             e.preventDefault();
-            // Use Next.js router for navigation
-            // Implement your navigation logic here (using Next.js router)
-            // Example: router.push(href);
+            router.push(href);
         }
-    }, []);
+    }, [router]);
 
     const navigate = useCallback((e: MouseEvent) => {
         let target = e.target as HTMLElement;
@@ -47,22 +47,15 @@ const T3HtmlParser: React.FC<T3HtmlParserProps> = ({ content }) => {
     }, [redirect]);
 
     const addListeners = useCallback(() => {
-        linksRef.current =
-            htmlParserRef.current?.getElementsByTagName("a") || null;
-        if (linksRef.current) {
-            for (let i = 0; i < linksRef.current.length; i++) {
-                linksRef.current[i]?.addEventListener("click", navigate);
-            }
-        }
+        // Query all anchor tags within the parsed HTML content
+        const links = htmlParserRef.current?.querySelectorAll('a');
+        linksRef.current = links ? (links as HTMLCollectionOf<HTMLAnchorElement>) : null;
+        linksRef.current?.forEach(link => link.addEventListener('click', navigate));
     }, [navigate]);
 
     const removeListeners = useCallback(() => {
-        if (linksRef.current) {
-            for (let i = 0; i < linksRef.current.length; i++) {
-                linksRef.current[i]?.removeEventListener("click", navigate);
-            }
-            linksRef.current = null;
-        }
+        linksRef.current?.forEach(link => link.removeEventListener('click', navigate));
+        linksRef.current = null; // Clear the ref after removing listeners
     }, [navigate]);
 
     useEffect(() => {
