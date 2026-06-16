@@ -19,6 +19,16 @@ jobs:
         with:
           node-version: 22
 
+      - name: Configure Yarn for GitHub Packages
+        run: yarn config set npmRegistries."https://npm.pkg.github.com".npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Yarn for registry.npmjs.org
+        run: yarn config set npmRegistries."https://registry.npmjs.org".npmAuthToken "${{ secrets.NPM_TOKEN }}"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Enable Corepack
         run: corepack enable
 
@@ -32,9 +42,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Lint
         run: yarn lint
@@ -60,6 +67,16 @@ jobs:
         with:
           node-version: 22
 
+      - name: Configure Yarn for GitHub Packages
+        run: yarn config set npmRegistries."https://npm.pkg.github.com".npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Yarn for registry.npmjs.org
+        run: yarn config set npmRegistries."https://registry.npmjs.org".npmAuthToken "${{ secrets.NPM_TOKEN }}"
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Enable Corepack
         run: corepack enable
 
@@ -73,14 +90,7 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build
         run: yarn build
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish to npm
         run: yarn npm publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
