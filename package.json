@@ -1,6 +1,6 @@
 {
   "name": "@pixelcoda/headless-nextjs",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.2",
   "description": "Production-ready Next.js App Router frontend framework for TYPO3 Headless with PixelCoda compatibility",
   "author": "Casian Blanaru",
   "license": "MIT",
@@ -97,8 +97,6 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/typography": "^0.5.20",
     "axios": "^1.17.0",
     "defu": "^6.1.7",
     "next": "^16.2.7",
@@ -124,6 +122,7 @@
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.0",
     "postcss": "^8.4.47",
+    "ts-jest": "^30.0.0",
     "tailwindcss": "^3.4.14",
     "tsup": "^8.0.0",
     "typescript": "^6.0.3"
