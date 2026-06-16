@@ -1,6 +1,6 @@
 {
   "name": "@pixelcoda/headless-nextjs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "packageManager": "yarn@4.5.1",
   "description": "Production-ready Next.js App Router frontend framework for TYPO3 Headless with PixelCoda compatibility",
   "author": "Casian Blanaru",
