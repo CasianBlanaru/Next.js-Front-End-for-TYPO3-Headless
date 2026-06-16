@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Configure Yarn for GitHub Packages
         run: yarn config set npmRegistries."https://npm.pkg.github.com".npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
         env:
@@ -28,9 +31,6 @@ jobs:
         run: yarn config set npmRegistries."https://registry.npmjs.org".npmAuthToken "${{ secrets.NPM_TOKEN }}"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Cache dependencies
         uses: actions/cache@v4
@@ -67,6 +67,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Configure Yarn for GitHub Packages
         run: yarn config set npmRegistries."https://npm.pkg.github.com".npmAuthToken "${{ secrets.GITHUB_TOKEN }}"
         env:
@@ -76,9 +79,6 @@ jobs:
         run: yarn config set npmRegistries."https://registry.npmjs.org".npmAuthToken "${{ secrets.NPM_TOKEN }}"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Cache dependencies
         uses: actions/cache@v4
