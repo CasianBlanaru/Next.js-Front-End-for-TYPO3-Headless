@@ -1540,7 +1540,7 @@ __metadata:
     react: "npm:^19.2.7"
     react-dom: "npm:^19.2.7"
     tailwindcss: "npm:^3.4.14"
-    ts-jest: "npm:29.4.11"
+    ts-jest: "npm:^29.4.11"
     tsup: "npm:^8.0.0"
     typescript: "npm:^6.0.3"
     ufo: "npm:^1.6.4"
@@ -7654,7 +7654,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:29.4.11":
+"ts-jest@npm:^29.4.11":
   version: 29.4.11
   resolution: "ts-jest@npm:29.4.11"
   dependencies:
