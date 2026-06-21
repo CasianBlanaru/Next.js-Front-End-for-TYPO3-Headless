@@ -1,3 +1,5 @@
+"use client";
+
 import { T3Frame } from '@pixelcoda/headless-nextjs';
 import { flattenContent, getBestImageUrl, normalizeMediaUrl } from '../lib/typo3';
 
