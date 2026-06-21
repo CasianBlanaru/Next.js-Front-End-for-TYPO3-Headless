@@ -20,6 +20,15 @@ const nextConfig = {
       { protocol: 'https', hostname: '**' },
     ],
   },
+  async rewrites() {
+    const typo3Url = process.env.NEXT_PUBLIC_TYPO3_BASE_URL || 'https://api.typo3-inst.localhost';
+    return [
+      {
+        source: '/typo3/:path*',
+        destination: `${typo3Url.replace(/\/$/, '')}/typo3/:path*`,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
