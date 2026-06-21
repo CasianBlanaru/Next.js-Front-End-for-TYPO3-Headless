@@ -77,8 +77,16 @@ export function TextElement({ element }) {
         data-pixelcoda-ctype={pcMeta.ctype || element.type}
         data-pixelcoda-edit-url={pcMeta.backendEditUrl}
       >
-        {content.header ? <h2>{content.header}</h2> : null}
-        {content.subheader ? <p className="lead">{content.subheader}</p> : null}
+        {content.header ? (
+          <h2 data-pc-field="" data-table="tt_content" data-uid={element.id} data-field="header">
+            {content.header}
+          </h2>
+        ) : null}
+        {content.subheader ? (
+          <p className="lead" data-pc-field="" data-table="tt_content" data-uid={element.id} data-field="subheader">
+            {content.subheader}
+          </p>
+        ) : null}
         {media.length ? (
           <div className="content-media">
             {media.map((file, index) => {
@@ -89,7 +97,16 @@ export function TextElement({ element }) {
             })}
           </div>
         ) : null}
-        {content.bodytext ? <div className="content-body" dangerouslySetInnerHTML={{ __html: content.bodytext }} /> : null}
+        {content.bodytext ? (
+          <div 
+            className="content-body" 
+            data-pc-field="" 
+            data-table="tt_content" 
+            data-uid={element.id} 
+            data-field="bodytext" 
+            dangerouslySetInnerHTML={{ __html: content.bodytext }} 
+          />
+        ) : null}
       </article>
     </T3Frame>
   );
