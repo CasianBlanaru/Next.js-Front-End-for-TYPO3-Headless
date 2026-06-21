@@ -1,22 +1,25 @@
-const path = require("path");
+const path = require('path');
 
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
-
   turbopack: {
     root: path.resolve(__dirname),
   },
-
   allowedDevOrigins: [
-    "nextjs-demo.ddev.site",
-    "api.nextjs-demo.ddev.site",
-    "pwa-demo.ddev.site",
-    "api.pwa-demo.ddev.site",
-    "localhost",
-    "127.0.0.1",
+    'localhost',
+    '127.0.0.1',
+    'typo3-inst.localhost',
+    'api.typo3-inst.localhost',
+    'web-production-e607a.up.railway.app',
   ],
-
   images: {
     unoptimized: true,
+    remotePatterns: [
+      { protocol: 'http', hostname: '**' },
+      { protocol: 'https', hostname: '**' },
+    ],
   },
 };
+
+module.exports = nextConfig;
