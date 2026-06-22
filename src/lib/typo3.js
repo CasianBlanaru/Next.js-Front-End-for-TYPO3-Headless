@@ -86,6 +86,9 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
     delete cleanSearchParams.per_page;
   }
 
+  // Force page type 834 for headless JSON rendering
+  cleanSearchParams.type = '834';
+
   const query = toQueryString(cleanSearchParams);
   const url = `${joinUrl(apiBase, path)}${query}`;
   const response = await fetch(url, {
