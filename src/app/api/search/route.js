@@ -25,6 +25,7 @@ export async function GET(request) {
 
   try {
     const res = await fetch(typo3SearchUrl, {
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
       },
