@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pixelcoda">
+  <rect width="64" height="64" rx="16" fill="#24184f"/>
+  <path fill="#ff8a00" d="M14 13c9 1 17 6 23 14-2 8-7 15-15 20C16 39 12 29 14 13Z"/>
+  <path fill="#ffb13b" d="M39 10c5 0 10 1 15 4-1 8-4 14-10 19-5-4-8-11-5-23Z"/>
+</svg>
