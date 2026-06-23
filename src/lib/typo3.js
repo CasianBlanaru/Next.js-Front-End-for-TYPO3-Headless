@@ -2,7 +2,7 @@ import { siteConfig } from './config';
 
 function joinUrl(base, path = '/') {
   const cleanBase = String(base || '').replace(/\/$/, '');
-  const cleanPath = path === '/' ? '' : `/${String(path).replace(/^\/+/, '')}`;
+  const cleanPath = path === '/' ? '/' : `/${String(path).replace(/^\/+/, '')}`;
   return `${cleanBase}${cleanPath}`;
 }
 
