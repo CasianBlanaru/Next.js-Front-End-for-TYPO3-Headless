@@ -11,7 +11,7 @@ const nextConfig = {
     '127.0.0.1',
     'typo3-inst.localhost',
     'api.typo3-inst.localhost',
-    'web-production-e607a.up.railway.app',
+    'web-production-581b4.up.railway.app',
   ],
   images: {
     unoptimized: true,

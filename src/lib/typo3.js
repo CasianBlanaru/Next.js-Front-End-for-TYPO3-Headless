@@ -71,28 +71,23 @@ export function getBestImageUrl(file) {
 }
 
 export async function fetchPageData(path = '/', searchParams = null, cookie = null) {
-  // Strip '/headless' suffix from apiBaseUrl if present to target TYPO3 directly
-  let apiBase = siteConfig.apiBaseUrl;
-  if (apiBase.endsWith('/headless')) {
-    apiBase = siteConfig.typo3BaseUrl;
-  }
+  const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
-  // Clean search params that trigger cHash verification in TYPO3
+  // Strip search params that trigger cHash validation in TYPO3
   const cleanSearchParams = { ...searchParams };
   if (cleanSearchParams) {
     delete cleanSearchParams.q;
     delete cleanSearchParams.collections;
     delete cleanSearchParams.page;
     delete cleanSearchParams.per_page;
+    // Remove type if set externally — typeNum 0 is the headless page content endpoint
+    delete cleanSearchParams.type;
   }
-
-  // Force page type 834 for headless JSON rendering
-  cleanSearchParams.type = '834';
 
   const query = toQueryString(cleanSearchParams);
   const url = `${joinUrl(apiBase, path)}${query}`;
   const response = await fetch(url, {
-    headers: { 
+    headers: {
       Accept: 'application/json',
       ...(cookie ? { Cookie: cookie } : {}),
     },
@@ -104,6 +99,20 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
     throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
   }
 
+  return response.json();
+}
+
+export async function fetchInitialData(cookie = null) {
+  const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
+  const url = `${apiBase}/?type=834`;
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+      ...(cookie ? { Cookie: cookie } : {}),
+    },
+    cache: 'no-store',
+  });
+  if (!response.ok) return null;
   return response.json();
 }
 
