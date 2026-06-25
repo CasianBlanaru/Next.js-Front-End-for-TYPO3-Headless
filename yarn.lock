@@ -553,6 +553,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gsap@npm:^3.12.5":
+  version: 3.15.0
+  resolution: "gsap@npm:3.15.0"
+  checksum: 10c0/5d86de72cb0bd6b20502c34c329a83a7d679979731bb465164407b7a5225aa61d612beee740eea36258622897c116cd2ca35320d530b7cf68bad62522361fcf7
+  languageName: node
+  linkType: hard
+
 "has-symbols@npm:^1.0.3, has-symbols@npm:^1.1.0":
   version: 1.1.0
   resolution: "has-symbols@npm:1.1.0"
@@ -717,6 +724,7 @@ __metadata:
   resolution: "pixelcoda-nextjs-frontend@workspace:."
   dependencies:
     "@pixelcoda/headless-nextjs": "npm:^1.1.4"
+    gsap: "npm:^3.12.5"
     next: "npm:^16.2.9"
     postcss: "npm:^8.5.15"
     react: "npm:^19.2.7"

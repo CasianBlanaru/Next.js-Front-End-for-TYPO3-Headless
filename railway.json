@@ -2,10 +2,12 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "echo '//registry.npmjs.org/:_authToken='\"$NPM_TOKEN\" > .npmrc && yarn install && yarn build"
+    "buildCommand": "yarn install && yarn build"
   },
   "deploy": {
     "startCommand": "yarn start",
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
