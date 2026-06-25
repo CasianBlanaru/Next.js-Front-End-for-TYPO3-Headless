@@ -35,27 +35,14 @@ export function normalizeMediaUrl(value) {
   if (!value) return '';
   if (value.startsWith('data:') || value.startsWith('blob:')) return value;
 
-  const typo3Origin = siteConfig.typo3BaseUrl.replace(/\/$/, '');
-  let fileApi = siteConfig.frontendFileApi.replace(/\/$/, '');
-  if (fileApi.startsWith('/headless')) {
-    fileApi = fileApi.replace(/^\/headless/, '') || '/fileadmin';
-  }
-
+  // If it's already an absolute URL, return as-is
   try {
     const url = new URL(value);
-    const fileadminIndex = url.pathname.indexOf('/fileadmin/');
-    if (fileadminIndex >= 0) {
-      return `${typo3Origin}${fileApi}${url.pathname.slice(fileadminIndex + '/fileadmin'.length)}${url.search}`;
-    }
     return value;
   } catch {
+    // Relative path - prepend TYPO3 base URL
+    const typo3Origin = siteConfig.typo3BaseUrl.replace(/\/$/, '');
     const path = value.startsWith('/') ? value : `/${value}`;
-    if (path.startsWith('/fileadmin/')) {
-      return `${typo3Origin}${fileApi}${path.replace('/fileadmin', '')}`;
-    }
-    if (path.startsWith(fileApi)) {
-      return `${typo3Origin}${path}`;
-    }
     return `${typo3Origin}${path}`;
   }
 }

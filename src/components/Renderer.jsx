@@ -55,9 +55,16 @@ function getElementMedia(element) {
   if (Array.isArray(content.media)) return content.media;
 
   const rows = content.gallery?.rows;
-  if (!rows || !Array.isArray(rows)) return [];
+  if (!rows) return [];
   
-  const columns = rows.flatMap((row) => row.columns || []);
+  // rows kann ein Objekt sein (nicht Array)
+  const rowsArray = Array.isArray(rows) ? rows : Object.values(rows);
+  
+  const columns = rowsArray.flatMap((row) => {
+    const cols = row.columns || [];
+    return Array.isArray(cols) ? cols : Object.values(cols);
+  });
+  
   return columns;
 }
 
