@@ -54,7 +54,10 @@ function getElementMedia(element) {
   const content = element.content || {};
   if (Array.isArray(content.media)) return content.media;
 
-  const columns = content.gallery?.rows?.flatMap((row) => row.columns || []) || [];
+  const rows = content.gallery?.rows;
+  if (!rows || !Array.isArray(rows)) return [];
+  
+  const columns = rows.flatMap((row) => row.columns || []);
   return columns;
 }
 
