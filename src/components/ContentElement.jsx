@@ -1,9 +1,7 @@
-import { GsapAnimatedContent } from './GsapAnimatedContent';
+"use client";
 
 export function ContentElement({ content, children }) {
-  const animationSettings = content?._gsap;
   const pixelcodaData = content?._pixelcoda;
-  const hasAnimation = animationSettings && animationSettings.animation;
 
   const editingAttributes = {};
   if (pixelcodaData?.uid) {
@@ -17,10 +15,7 @@ export function ContentElement({ content, children }) {
     }
   }
 
-  const ContentWrapper = hasAnimation ? GsapAnimatedContent : 'div';
-  const wrapperProps = hasAnimation 
-    ? { animationSettings, ...editingAttributes }
-    : editingAttributes;
-
-  return <ContentWrapper {...wrapperProps}>{children}</ContentWrapper>;
+  // GSAP animations temporarily disabled due to Turbopack module loading issues
+  // Will be re-enabled after investigating Turbopack compatibility
+  return <div {...editingAttributes}>{children}</div>;
 }

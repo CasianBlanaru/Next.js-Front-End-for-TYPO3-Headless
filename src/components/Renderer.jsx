@@ -2,6 +2,7 @@
 
 import { T3Frame } from '@pixelcoda/headless-nextjs';
 import { flattenContent, getBestImageUrl, normalizeMediaUrl } from '../lib/typo3';
+import { ContentElement } from './ContentElement';
 
 function isTypo3Error(element) {
   const bodytext = element?.content?.bodytext || element?.content?.html || '';
@@ -14,7 +15,6 @@ export function PixelcodaSearchElement({ element }) {
   const ui = content.ui || {};
   const placeholder = config.placeholder || content.placeholder || 'Website durchsuchen...';
   const collections = config.collections || 'pages,tt_content';
-  const pcMeta = content._pixelcoda || {};
 
   return (
     <T3Frame 
@@ -24,14 +24,8 @@ export function PixelcodaSearchElement({ element }) {
       spaceBefore={element.appearance?.spaceBefore}
       spaceAfter={element.appearance?.spaceAfter}
     >
-      <section 
-        className="pixelcoda-search-shell" 
-        data-t3-uid={element.id} 
-        data-t3-type={element.type}
-        data-pixelcoda-uid={pcMeta.uid}
-        data-pixelcoda-ctype={pcMeta.ctype || element.type}
-        data-pixelcoda-edit-url={pcMeta.backendEditUrl}
-      >
+      <ContentElement content={content}>
+        <section className="pixelcoda-search-shell">
         <header>
           <p className="eyebrow">PixelCoda Search</p>
           <h2>{content.header || 'Suche'}</h2>
@@ -46,6 +40,7 @@ export function PixelcodaSearchElement({ element }) {
           <div className="pixelcoda-search-ask">KI-Antworten sind fuer diese Suche vorbereitet.</div>
         ) : null}
       </section>
+      </ContentElement>
     </T3Frame>
   );
 }
@@ -71,7 +66,6 @@ function getElementMedia(element) {
 export function TextElement({ element }) {
   const content = element.content || {};
   const media = getElementMedia(element);
-  const pcMeta = content._pixelcoda || {};
 
   return (
     <T3Frame 
@@ -81,14 +75,8 @@ export function TextElement({ element }) {
       spaceBefore={element.appearance?.spaceBefore}
       spaceAfter={element.appearance?.spaceAfter}
     >
-      <article 
-        className={`content-element content-element--${element.type}`} 
-        data-t3-uid={element.id} 
-        data-t3-type={element.type}
-        data-pixelcoda-uid={pcMeta.uid}
-        data-pixelcoda-ctype={pcMeta.ctype || element.type}
-        data-pixelcoda-edit-url={pcMeta.backendEditUrl}
-      >
+      <ContentElement content={content}>
+        <article className={`content-element content-element--${element.type}`}>
         {content.header ? (
           <h2 data-pc-field="" data-table="tt_content" data-uid={element.id} data-field="header">
             {content.header}
@@ -120,6 +108,7 @@ export function TextElement({ element }) {
           />
         ) : null}
       </article>
+      </ContentElement>
     </T3Frame>
   );
 }
