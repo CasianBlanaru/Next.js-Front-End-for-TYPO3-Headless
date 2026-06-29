@@ -42,6 +42,7 @@ export default async function Page({ params, searchParams }) {
     ]);
   } catch (exception) {
     error = exception;
+    console.error('TYPO3 API Error:', exception);
   }
 
   const navigation = initialData?.navigation || [];
@@ -60,8 +61,13 @@ export default async function Page({ params, searchParams }) {
       <section className="content-shell">
         {error ? (
           <div className="error-box">
-            <h2>TYPO3 API konnte nicht geladen werden</h2>
-            <p>{error.message}</p>
+            <h2>TYPO3 API Connection Error</h2>
+            <p><strong>Message:</strong> {error.message}</p>
+            <p><strong>API URL:</strong> {process.env.NEXT_PUBLIC_API_BASE_URL || 'Not configured'}</p>
+            <details>
+              <summary>Debug Info</summary>
+              <pre>{JSON.stringify({ path, error: error.stack }, null, 2)}</pre>
+            </details>
           </div>
         ) : (
           <Renderer page={page} />
