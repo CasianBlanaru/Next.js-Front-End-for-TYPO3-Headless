@@ -73,34 +73,60 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
 
   const query = toQueryString(cleanSearchParams);
   const url = `${joinUrl(apiBase, path)}${query}`;
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      ...(cookie ? { Cookie: cookie } : {}),
-    },
-    cache: 'no-store',
-  });
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        ...(cookie ? { Cookie: cookie } : {}),
+      },
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
 
-  if (!response.ok) {
-    const text = await response.text().catch(() => '');
-    throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
+    if (!response.ok) {
+      const text = await response.text().catch(() => '');
+      throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error(`TYPO3 API timeout after 5s for ${url}`);
+    }
+    throw error;
   }
-
-  return response.json();
 }
 
 export async function fetchInitialData(cookie = null) {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      ...(cookie ? { Cookie: cookie } : {}),
-    },
-    cache: 'no-store',
-  });
-  if (!response.ok) return null;
-  return response.json();
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        ...(cookie ? { Cookie: cookie } : {}),
+      },
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    if (!response.ok) return null;
+    return response.json();
+  } catch (error) {
+    clearTimeout(timeoutId);
+    console.error('fetchInitialData error:', error.message);
+    return null;
+  }
 }
 
 export function normalizeContentColumns(content) {
