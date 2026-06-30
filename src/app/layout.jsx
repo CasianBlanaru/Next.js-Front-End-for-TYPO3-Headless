@@ -1,5 +1,4 @@
 import './globals.css';
-import FrontendEditor from '../components/FrontendEditor';
 
 export const metadata = {
   title: 'PixelCoda TYPO3 Headless Frontend',
@@ -11,7 +10,6 @@ export default function RootLayout({ children }) {
     <html lang="de" suppressHydrationWarning>
       <body>
         {children}
-        <FrontendEditor />
       </body>
     </html>
   );
