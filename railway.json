@@ -5,11 +5,7 @@
     "buildCommand": "yarn install && yarn build"
   },
   "deploy": {
-<<<<<<< HEAD
     "startCommand": "next start -H 0.0.0.0 -p ${PORT:-3000}",
-=======
-    "startCommand": "next start -H 0.0.0.0 -p $PORT",
->>>>>>> 7fe9c99 (frontend)
     "healthcheckPath": "/api/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
