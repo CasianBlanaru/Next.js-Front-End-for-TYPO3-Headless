@@ -8,6 +8,7 @@ RUN npm install -g yarn && yarn install
 COPY . .
 RUN yarn build
 
+EXPOSE 3000
 ENV HOSTNAME=0.0.0.0
 
-CMD sh -c "yarn start"
+CMD ["yarn", "start"]
