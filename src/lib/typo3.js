@@ -58,11 +58,7 @@ export function getBestImageUrl(file) {
 }
 
 export async function fetchPageData(path = '/', searchParams = null, cookie = null) {
-  let apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
-  // Ensure /headless is always appended if not already present
-  if (!apiBase.endsWith('/headless')) {
-    apiBase = apiBase + '/headless';
-  }
+  const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
   // Strip search params that trigger cHash validation in TYPO3
   const cleanSearchParams = { ...searchParams };
@@ -108,10 +104,7 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
 }
 
 export async function fetchInitialData(cookie = null) {
-  let apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
-  if (!apiBase.endsWith('/headless')) {
-    apiBase = apiBase + '/headless';
-  }
+  const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
   
   const controller = new AbortController();
