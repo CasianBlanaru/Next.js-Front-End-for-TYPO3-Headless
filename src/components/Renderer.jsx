@@ -3,6 +3,7 @@
 import { T3Frame } from '@pixelcoda/headless-nextjs';
 import { flattenContent, getBestImageUrl, normalizeMediaUrl } from '../lib/typo3';
 import { ContentElement } from './ContentElement';
+import { GsapAnimatedContent } from './GsapAnimatedContent';
 
 function isTypo3Error(element) {
   const bodytext = element?.content?.bodytext || element?.content?.html || '';
@@ -153,9 +154,17 @@ export default function Renderer({ page }) {
   if (!elements.length) {
     return <p className="empty-state">No TYPO3 content returned for this page.</p>;
   }
-  return elements.map((element) => (
-    <div className="renderer-item" key={`${element.__colPos}-${element.id || element.__index}`}>
-      {renderElement(element)}
-    </div>
-  ));
+  return elements.map((element) => {
+    const animationSettings = element?.content?.animationSettings || element?.animationSettings || null;
+    const rendered = renderElement(element);
+    return (
+      <div className="renderer-item" key={`${element.__colPos}-${element.id || element.__index}`}>
+        {animationSettings ? (
+          <GsapAnimatedContent animationSettings={animationSettings}>
+            {rendered}
+          </GsapAnimatedContent>
+        ) : rendered}
+      </div>
+    );
+  });
 }
