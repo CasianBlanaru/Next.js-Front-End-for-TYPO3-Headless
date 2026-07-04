@@ -10,29 +10,31 @@ export default function FrontendEditor() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Check if backend user cookie exists
-    const hasCookie = document.cookie.includes('be_typo_user');
-    setHasBackendSession(hasCookie);
-
-    if (!hasCookie) return;
-
     const typo3BaseUrl = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
-    // Fetch _assets directory to find the asset hash
-    fetch(`${typo3BaseUrl}/_assets/`, { credentials: 'include' })
-      .then(res => res.text())
-      .then(html => {
-        const match = html.match(/href="([a-f0-9]{32})\//i);
-        if (match) {
-          setAssetHash(match[1]);
-        } else {
-          // Fallback: try common hash
-          setAssetHash('118a46030edf2e8932199b42dcc98b96');
+    // Check backend session via API proxy (works cross-domain)
+    fetch('/api/be-session', { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        setHasBackendSession(data.hasSession === true);
+        if (data.hasSession && data.assetHash) {
+          setAssetHash(data.assetHash);
+        } else if (data.hasSession) {
+          // Fallback: discover hash from _assets
+          fetch(`${typo3BaseUrl}/_assets/`, { credentials: 'include' })
+            .then(r => r.text())
+            .then(html => {
+              const match = html.match(/href="([a-f0-9]{32})\//i);
+              setAssetHash(match ? match[1] : '118a46030edf2e8932199b42dcc98b96');
+            })
+            .catch(() => setAssetHash('118a46030edf2e8932199b42dcc98b96'));
         }
       })
       .catch(() => {
-        // Fallback
-        setAssetHash('118a46030edf2e8932199b42dcc98b96');
+        // Fallback: check cookie directly (same-domain)
+        const hasCookie = document.cookie.includes('be_typo_user');
+        setHasBackendSession(hasCookie);
+        if (hasCookie) setAssetHash('118a46030edf2e8932199b42dcc98b96');
       });
   }, []);
 

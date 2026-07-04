@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove standalone for now
+  turbopack: {
+    root: __dirname,
+  },
 };
 
 module.exports = nextConfig;
