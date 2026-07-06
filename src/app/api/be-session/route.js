@@ -20,7 +20,16 @@ export async function GET() {
 
     if (res.ok) {
       const data = await res.json();
-      return Response.json({ hasSession: true, assetHash: data.assetHash || null });
+      return Response.json({
+        hasSession: true,
+        assetHash: data.assetHash || null,
+        feEditorToken: data.feEditorToken || null,
+        // Point ajaxUrls to local Next.js proxy routes to avoid cross-origin cookie issues
+        ajaxUrls: {
+          fe_editor_save: '/api/fe-editor/save',
+          fe_editor_ai: '/api/fe-editor/ai',
+        },
+      });
     }
 
     return Response.json({ hasSession: true, assetHash: null });

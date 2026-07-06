@@ -38,9 +38,7 @@ export default function FrontendEditor() {
         }
       })
       .catch(() => {
-        const hasCookie = document.cookie.includes('be_typo_user');
-        setHasBackendSession(hasCookie);
-        if (hasCookie) setAssetHash('118a46030edf2e8932199b42dcc98b96');
+        setHasBackendSession(false);
       });
   }, []);
 

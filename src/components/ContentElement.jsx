@@ -17,5 +17,5 @@ export function ContentElement({ content, children }) {
 
   // GSAP animations temporarily disabled due to Turbopack module loading issues
   // Will be re-enabled after investigating Turbopack compatibility
-  return <div {...editingAttributes}>{children}</div>;
+  return <div style={{ position: 'relative' }} {...editingAttributes}>{children}</div>;
 }

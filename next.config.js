@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {
-    root: __dirname,
-  },
+  ...(process.env.NODE_ENV !== 'production' && {
+    turbopack: {
+      root: __dirname,
+    },
+  }),
 };
 
 module.exports = nextConfig;
