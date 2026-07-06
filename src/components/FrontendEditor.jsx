@@ -17,10 +17,17 @@ export default function FrontendEditor() {
       .then(res => res.json())
       .then(data => {
         setHasBackendSession(data.hasSession === true);
-        if (data.hasSession && data.assetHash) {
+        if (!data.hasSession) return;
+
+        if (data.feEditorToken && data.ajaxUrls) {
+          window.TYPO3 = window.TYPO3 || { settings: {}, security: {} };
+          window.TYPO3.settings.ajaxUrls = { ...window.TYPO3.settings?.ajaxUrls, ...data.ajaxUrls };
+          window.TYPO3.security.feEditorToken = data.feEditorToken;
+        }
+
+        if (data.assetHash) {
           setAssetHash(data.assetHash);
-        } else if (data.hasSession) {
-          // Fallback: discover hash from _assets
+        } else {
           fetch(`${typo3BaseUrl}/_assets/`, { credentials: 'include' })
             .then(r => r.text())
             .then(html => {
@@ -31,7 +38,6 @@ export default function FrontendEditor() {
         }
       })
       .catch(() => {
-        // Fallback: check cookie directly (same-domain)
         const hasCookie = document.cookie.includes('be_typo_user');
         setHasBackendSession(hasCookie);
         if (hasCookie) setAssetHash('118a46030edf2e8932199b42dcc98b96');
@@ -49,21 +55,18 @@ export default function FrontendEditor() {
     editorCss.href = `${typo3BaseUrl}/_assets/${assetHash}/editor.css`;
     document.head.appendChild(editorCss);
 
-    // Initialize minimal TYPO3 global object
+    // Ensure TYPO3 global is initialized with icon paths
     window.TYPO3 = window.TYPO3 || { settings: {}, security: {} };
-    window.TYPO3.settings.ajaxUrls = window.TYPO3.settings.ajaxUrls || {};
-    window.TYPO3.settings.ajaxUrls['fe_editor_save'] = `${typo3BaseUrl}/typo3/ajax/fe-editor/save`;
-    window.TYPO3.settings.ajaxUrls['fe_editor_ai'] = `${typo3BaseUrl}/typo3/ajax/fe-editor/ai`;
-    window.TYPO3.security.feEditorToken = '';
-    window.TYPO3.settings.feEditorPageId = 0;
-    window.TYPO3.settings.feEditorRecords = [];
+    window.TYPO3.settings = window.TYPO3.settings || {};
+    window.TYPO3.settings.feEditorPageId = window.TYPO3.settings.feEditorPageId || 0;
+    window.TYPO3.settings.feEditorRecords = window.TYPO3.settings.feEditorRecords || [];
     window.TYPO3.settings.feEditorIcons = {
       edit: `${typo3BaseUrl}/_assets/${assetHash}/Icons/edit.svg`,
       ai: `${typo3BaseUrl}/_assets/${assetHash}/Icons/ai.svg`,
       add: `${typo3BaseUrl}/_assets/${assetHash}/Icons/add.svg`,
     };
-    window.TYPO3.settings.feEditorAiConfigured = false;
-    window.TYPO3.settings.feEditorAiProvider = '';
+    window.TYPO3.settings.feEditorAiConfigured = window.TYPO3.settings.feEditorAiConfigured || false;
+    window.TYPO3.settings.feEditorAiProvider = window.TYPO3.settings.feEditorAiProvider || '';
 
     // Load editor JS
     const editorJs = document.createElement('script');
