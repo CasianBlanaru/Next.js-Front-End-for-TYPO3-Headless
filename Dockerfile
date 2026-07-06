@@ -1,5 +1,8 @@
 FROM node:22-alpine
 
+# Cache bust: 2026-07-06
+ARG CACHEBUST=1
+
 WORKDIR /app
 
 RUN corepack enable && corepack prepare yarn@4.12.0 --activate
