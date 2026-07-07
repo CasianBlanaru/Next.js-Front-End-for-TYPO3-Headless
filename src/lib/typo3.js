@@ -91,8 +91,14 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
     clearTimeout(timeoutId);
 
     if (response.status === 429) {
-      await new Promise((r) => setTimeout(r, 1000));
-      throw new Error(`TYPO3 API 429 for ${url}: rate limited`);
+      clearTimeout(timeoutId);
+      await new Promise((r) => setTimeout(r, 2000));
+      const retry = await fetch(url, {
+        headers: { Accept: 'application/json', ...(hasCookie ? { Cookie: cookie } : {}) },
+        cache: 'no-store',
+      });
+      if (!retry.ok) throw new Error(`TYPO3 API ${retry.status} for ${url}: rate limited`);
+      return retry.json();
     }
 
     if (!response.ok) {
