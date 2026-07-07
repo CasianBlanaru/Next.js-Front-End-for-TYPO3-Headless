@@ -8,25 +8,24 @@ async function cachedFetch(url, options) {
   const hit = memCache.get(url);
   if (hit && now - hit.ts < MEM_TTL) return hit.data;
 
-  const response = await fetch(url, options);
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, attempt * 3000));
 
-  if (response.status === 429) {
-    await new Promise((r) => setTimeout(r, 3000));
-    const retry = await fetch(url, { ...options, cache: 'no-store' });
-    if (!retry.ok) throw new Error(`TYPO3 API ${retry.status} for ${url}: rate limited`);
-    const data = await retry.json();
-    memCache.set(url, { ts: now, data });
+    const response = await fetch(url, options);
+
+    if (response.status === 429) continue;
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => '');
+      throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
+    }
+
+    const data = await response.json();
+    memCache.set(url, { ts: Date.now(), data });
     return data;
   }
 
-  if (!response.ok) {
-    const text = await response.text().catch(() => '');
-    throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
-  }
-
-  const data = await response.json();
-  memCache.set(url, { ts: now, data });
-  return data;
+  throw new Error(`TYPO3 API 429 for ${url}: rate limited`);
 }
 
 function joinUrl(base, path = '/') {
