@@ -74,19 +74,26 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
   const query = toQueryString(cleanSearchParams);
   const url = `${joinUrl(apiBase, path)}${query}`;
   
+  const hasCookie = cookie && cookie.length > 0;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
-  
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',
-        ...(cookie ? { Cookie: cookie } : {}),
+        ...(hasCookie ? { Cookie: cookie } : {}),
       },
-      cache: 'no-store',
+      cache: hasCookie ? 'no-store' : 'default',
+      next: hasCookie ? undefined : { revalidate: 60 },
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
+
+    if (response.status === 429) {
+      await new Promise((r) => setTimeout(r, 1000));
+      throw new Error(`TYPO3 API 429 for ${url}: rate limited`);
+    }
 
     if (!response.ok) {
       const text = await response.text().catch(() => '');
@@ -97,7 +104,7 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
   } catch (error) {
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
-      throw new Error(`TYPO3 API timeout after 5s for ${url}`);
+      throw new Error(`TYPO3 API timeout after 10s for ${url}`);
     }
     throw error;
   }
@@ -106,17 +113,19 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
 export async function fetchInitialData(cookie = null) {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
-  
+  const hasCookie = cookie && cookie.length > 0;
+
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
-  
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',
-        ...(cookie ? { Cookie: cookie } : {}),
+        ...(hasCookie ? { Cookie: cookie } : {}),
       },
-      cache: 'no-store',
+      cache: hasCookie ? 'no-store' : 'default',
+      next: hasCookie ? undefined : { revalidate: 60 },
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
