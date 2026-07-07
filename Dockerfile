@@ -13,7 +13,5 @@ COPY . .
 RUN yarn build
 
 ENV HOSTNAME=0.0.0.0
-ENV PORT=8080
-EXPOSE 8080
 
-CMD ["sh", "-c", "node_modules/.bin/next start -H 0.0.0.0 -p ${PORT}"]
+CMD ["sh", "-c", "node_modules/.bin/next start -H 0.0.0.0 -p ${PORT:-3000}"]
