@@ -1,5 +1,34 @@
 import { siteConfig } from './config';
 
+const memCache = new Map();
+const MEM_TTL = 30_000;
+
+async function cachedFetch(url, options) {
+  const now = Date.now();
+  const hit = memCache.get(url);
+  if (hit && now - hit.ts < MEM_TTL) return hit.data;
+
+  const response = await fetch(url, options);
+
+  if (response.status === 429) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const retry = await fetch(url, { ...options, cache: 'no-store' });
+    if (!retry.ok) throw new Error(`TYPO3 API ${retry.status} for ${url}: rate limited`);
+    const data = await retry.json();
+    memCache.set(url, { ts: now, data });
+    return data;
+  }
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
+  }
+
+  const data = await response.json();
+  memCache.set(url, { ts: now, data });
+  return data;
+}
+
 function joinUrl(base, path = '/') {
   const cleanBase = String(base || '').replace(/\/$/, '');
   const cleanPath = path === '/' ? '/' : `/${String(path).replace(/^\/+/, '')}`;
@@ -75,70 +104,45 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
   const url = `${joinUrl(apiBase, path)}${query}`;
   
   const hasCookie = cookie && cookie.length > 0;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  try {
-    const response = await fetch(url, {
-      headers: {
-        Accept: 'application/json',
-        ...(hasCookie ? { Cookie: cookie } : {}),
-      },
-      cache: hasCookie ? 'no-store' : 'default',
-      next: hasCookie ? undefined : { revalidate: 60 },
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (response.status === 429) {
-      clearTimeout(timeoutId);
-      await new Promise((r) => setTimeout(r, 2000));
-      const retry = await fetch(url, {
-        headers: { Accept: 'application/json', ...(hasCookie ? { Cookie: cookie } : {}) },
+  if (hasCookie) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    try {
+      const response = await fetch(url, {
+        headers: { Accept: 'application/json', Cookie: cookie },
         cache: 'no-store',
+        signal: controller.signal,
       });
-      if (!retry.ok) throw new Error(`TYPO3 API ${retry.status} for ${url}: rate limited`);
-      return retry.json();
+      clearTimeout(timeoutId);
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
+      }
+      return response.json();
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') throw new Error(`TYPO3 API timeout after 10s for ${url}`);
+      throw error;
     }
-
-    if (!response.ok) {
-      const text = await response.text().catch(() => '');
-      throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
-      throw new Error(`TYPO3 API timeout after 10s for ${url}`);
-    }
-    throw error;
   }
+
+  return cachedFetch(url, {
+    headers: { Accept: 'application/json' },
+    next: { revalidate: 60 },
+  });
 }
 
 export async function fetchInitialData(cookie = null) {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
   const hasCookie = cookie && cookie.length > 0;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
-
   try {
-    const response = await fetch(url, {
-      headers: {
-        Accept: 'application/json',
-        ...(hasCookie ? { Cookie: cookie } : {}),
-      },
-      cache: hasCookie ? 'no-store' : 'default',
-      next: hasCookie ? undefined : { revalidate: 60 },
-      signal: controller.signal,
+    return await cachedFetch(url, {
+      headers: { Accept: 'application/json', ...(hasCookie ? { Cookie: cookie } : {}) },
+      ...(hasCookie ? { cache: 'no-store' } : { next: { revalidate: 60 } }),
     });
-    clearTimeout(timeoutId);
-    if (!response.ok) return null;
-    return response.json();
   } catch (error) {
-    clearTimeout(timeoutId);
     console.error('fetchInitialData error:', error.message);
     return null;
   }
