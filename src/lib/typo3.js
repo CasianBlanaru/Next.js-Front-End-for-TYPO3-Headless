@@ -8,10 +8,20 @@ async function cachedFetch(url, options) {
   const hit = memCache.get(url);
   if (hit && now - hit.ts < MEM_TTL) return hit.data;
 
+  const publicHost = process.env.NEXT_PUBLIC_TYPO3_BASE_URL
+    ? new URL(process.env.NEXT_PUBLIC_TYPO3_BASE_URL).host
+    : null;
+
+  const extraHeaders = publicHost
+    ? { Host: publicHost, 'X-Forwarded-Proto': 'https', 'X-Forwarded-Host': publicHost }
+    : {};
+
+  const headers = { ...options?.headers, ...extraHeaders };
+
   for (let attempt = 0; attempt < 3; attempt++) {
     if (attempt > 0) await new Promise((r) => setTimeout(r, attempt * 3000));
 
-    const response = await fetch(url, options);
+    const response = await fetch(url, { ...options, headers });
 
     if (response.status === 429) continue;
 
@@ -105,11 +115,17 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
   const hasCookie = cookie && cookie.length > 0;
 
   if (hasCookie) {
+    const publicHost = process.env.NEXT_PUBLIC_TYPO3_BASE_URL
+      ? new URL(process.env.NEXT_PUBLIC_TYPO3_BASE_URL).host
+      : null;
+    const extraHeaders = publicHost
+      ? { Host: publicHost, 'X-Forwarded-Proto': 'https', 'X-Forwarded-Host': publicHost }
+      : {};
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
       const response = await fetch(url, {
-        headers: { Accept: 'application/json', Cookie: cookie },
+        headers: { Accept: 'application/json', Cookie: cookie, ...extraHeaders },
         cache: 'no-store',
         signal: controller.signal,
       });
