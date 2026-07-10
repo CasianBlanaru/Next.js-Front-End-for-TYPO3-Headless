@@ -2,6 +2,7 @@ import React from 'react';
 import { siteConfig } from '../../lib/config';
 import DevTools from '../../components/DevTools';
 import { Metadata } from 'next';
+import { Typo3SearchResponse, Typo3SearchResult } from '../../types/typo3';
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -9,7 +10,7 @@ type Props = {
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
-  const q = resolvedSearchParams?.q || '';
+  const q = (resolvedSearchParams?.q as string) || '';
   return {
     title: q ? `Suchergebnisse für "${q}" - TYPO3 Headless` : 'Website durchsuchen - TYPO3 Headless',
     description: 'Suchen Sie auf unserer Website nach Inhalten.',
@@ -24,7 +25,7 @@ export default async function SuchePage({ searchParams }: Props) {
   const perPage = (resolvedSearchParams?.per_page as string) || '10';
   const activeType = (resolvedSearchParams?.type as string) || 'all';
 
-  let results: any = null;
+  let results: Typo3SearchResponse | null = null;
   let error: string | null = null;
 
   if (q && q.trim().length >= 3) {
@@ -42,28 +43,28 @@ export default async function SuchePage({ searchParams }: Props) {
       }
 
       results = await response.json();
-    } catch (e: any) {
-      error = e.message;
+    } catch (e: unknown) {
+      error = e instanceof Error ? e.message : String(e);
     }
   }
 
   // Calculate facets from the retrieved page results
   const totalCount = results?.data?.length || 0;
-  const pagesCount = results?.data?.filter((item: any) => item.attributes?.type === 'page').length || 0;
+  const pagesCount = results?.data?.filter((item: Typo3SearchResult) => item.attributes?.type === 'page').length || 0;
   const contentCount = totalCount - pagesCount;
 
   // Filter displayed results based on active facet
   let displayedResults = results?.data || [];
   if (activeType === 'page') {
-    displayedResults = displayedResults.filter((item: any) => item.attributes?.type === 'page');
+    displayedResults = displayedResults.filter((item: Typo3SearchResult) => item.attributes?.type === 'page');
   } else if (activeType === 'content') {
-    displayedResults = displayedResults.filter((item: any) => item.attributes?.type !== 'page');
+    displayedResults = displayedResults.filter((item: Typo3SearchResult) => item.attributes?.type !== 'page');
   }
 
   // Pagination parameters
   const currentPage = parseInt(page, 10);
   const totalPages = parseInt(
-    results?.meta?.total_pages || results?.meta?.pagination?.pages || '1',
+    String(results?.meta?.total_pages || results?.meta?.pagination?.pages || '1'),
     10
   );
 
@@ -186,7 +187,7 @@ export default async function SuchePage({ searchParams }: Props) {
             {/* Results List */}
             <div className="search-results-list">
               {displayedResults.length > 0 ? (
-                displayedResults.map((result: any) => {
+                displayedResults.map((result: Typo3SearchResult) => {
                   const attrs = result.attributes || {};
                   return (
                     <article className="content-element" key={result.id}>

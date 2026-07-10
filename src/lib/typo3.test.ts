@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { normalizePath, normalizeMediaUrl, getBestImageUrl, normalizeContentColumns } from './typo3';
+import { Typo3File } from '../types/typo3';
 
 describe('typo3 lib', () => {
   describe('normalizePath', () => {
@@ -40,11 +41,11 @@ describe('typo3 lib', () => {
 
   describe('getBestImageUrl', () => {
     it('should return empty string for empty input', () => {
-      expect(getBestImageUrl(null)).toBe('');
+      expect(getBestImageUrl(undefined)).toBe('');
     });
 
     it('should prioritize cropVariants default publicUrl', () => {
-      const file = {
+      const file: Typo3File = {
         cropVariants: {
           default: { publicUrl: '/cropped.jpg' }
         },
@@ -54,7 +55,7 @@ describe('typo3 lib', () => {
     });
 
     it('should fallback to publicUrl', () => {
-      const file = {
+      const file: Typo3File = {
         publicUrl: '/original.jpg'
       };
       expect(getBestImageUrl(file)).toBe('/original.jpg');
@@ -65,8 +66,8 @@ describe('typo3 lib', () => {
     it('should handle string content as html on colPos 0', () => {
       const result = normalizeContentColumns('Hello World');
       expect(result['0']).toBeDefined();
-      expect(result['0'][0].type).toBe('html');
-      expect(result['0'][0].content.bodytext).toBe('Hello World');
+      expect(result['0']?.[0].type).toBe('html');
+      expect(result['0']?.[0].content?.bodytext).toBe('Hello World');
     });
 
     it('should handle array content as colPos 0', () => {

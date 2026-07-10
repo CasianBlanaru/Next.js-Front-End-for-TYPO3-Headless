@@ -19,12 +19,14 @@ jobs:
         node-version: 22
         cache: 'npm'
 
+    - name: Debug Environment
+      run: |
+        node -v
+        npm -v
+        cat package.json
+
     - name: Install dependencies
       run: npm ci
-
-    - name: Lint
-      run: npm run lint
-      continue-on-error: true # Next.js might not have a default lint script if not configured
 
     - name: Typecheck
       run: npm run typecheck
@@ -34,6 +36,9 @@ jobs:
 
     - name: Build
       run: npm run build
+
+    - name: Lint
+      run: npm run lint
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium

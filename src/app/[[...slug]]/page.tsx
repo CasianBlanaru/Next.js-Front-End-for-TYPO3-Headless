@@ -6,6 +6,7 @@ import DevTools from '../../components/DevTools';
 import FrontendEditor from '../../components/FrontendEditor';
 import { Metadata, ResolvingMetadata } from 'next';
 import { siteConfig } from '../../lib/config';
+import { Typo3Page } from '../../types/typo3';
 
 type Props = {
   params: Promise<{ slug?: string[] }>;
@@ -21,7 +22,7 @@ export async function generateMetadata(
     const resolvedSearchParams = await searchParams;
     const path = normalizePath(resolved?.slug);
     const cookieStore = await cookies();
-    const page = normalizePageData(await fetchPageData(path, resolvedSearchParams, cookieStore.toString()));
+    const page = normalizePageData(await fetchPageData<Typo3Page>(path, resolvedSearchParams, cookieStore.toString()));
 
     const title = page?.seo?.title || page?.meta?.title || page?.title || 'TYPO3 Headless';
     const description = page?.meta?.description || page?.meta?.abstract || '';
@@ -53,17 +54,17 @@ export async function generateMetadata(
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  let page: any = null;
-  let error: any = null;
+  let page: Typo3Page | null = null;
+  let error: Error | null = null;
   const resolved = await params;
   const resolvedSearchParams = await searchParams;
   const path = normalizePath(resolved?.slug);
 
   try {
     const cookieStore = await cookies();
-    page = normalizePageData(await fetchPageData(path, resolvedSearchParams, cookieStore.toString()));
+    page = normalizePageData(await fetchPageData<Typo3Page>(path, resolvedSearchParams, cookieStore.toString()));
   } catch (e) {
-    error = e;
+    error = e instanceof Error ? e : new Error(String(e));
     console.error('TYPO3 API Error:', e);
   }
 
@@ -82,11 +83,11 @@ export default async function Page({ params, searchParams }: Props) {
           {error ? (
             <div className="error-box">
               <h2>TYPO3 API Error</h2>
-              <p>{error instanceof Error ? error.message : String(error)}</p>
+              <p>{error.message}</p>
             </div>
-          ) : (
+          ) : page ? (
             <Renderer page={page} />
-          )}
+          ) : null}
         </section>
       </main>
       <DevTools page={page || { error: error?.message, path }} />

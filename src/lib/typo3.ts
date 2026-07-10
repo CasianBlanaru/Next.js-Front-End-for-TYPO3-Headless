@@ -1,10 +1,10 @@
 import { siteConfig } from './config';
-import { Typo3Page, Typo3ContentElement } from '../types/typo3';
+import { Typo3Page, Typo3ContentElement, Typo3File } from '../types/typo3';
 
 const memCache = new Map<string, { ts: number; data: any }>();
 const MEM_TTL = 30_000;
 
-async function cachedFetch(url: string, options?: RequestInit) {
+async function cachedFetch<T = any>(url: string, options?: RequestInit): Promise<T> {
   const now = Date.now();
   const hit = memCache.get(url);
   if (hit && now - hit.ts < MEM_TTL) return hit.data;
@@ -86,7 +86,7 @@ export function normalizeMediaUrl(value: string | undefined): string {
   }
 }
 
-export function getBestImageUrl(file: any): string {
+export function getBestImageUrl(file: Typo3File | undefined): string {
   return (
     file?.cropVariants?.default?.publicUrl ||
     file?.publicUrl ||
@@ -96,7 +96,7 @@ export function getBestImageUrl(file: any): string {
   );
 }
 
-export async function fetchPageData(path: string = '/', searchParams: Record<string, any> | null = null, cookie: string | null = null): Promise<any> {
+export async function fetchPageData<T = any>(path: string = '/', searchParams: Record<string, any> | null = null, cookie: string | null = null): Promise<T> {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
   // Strip search params that trigger cHash validation in TYPO3
@@ -143,18 +143,18 @@ export async function fetchPageData(path: string = '/', searchParams: Record<str
     }
   }
 
-  return cachedFetch(url, {
+  return cachedFetch<T>(url, {
     headers: { Accept: 'application/json' },
     next: { revalidate: 60 },
   });
 }
 
-export async function fetchInitialData(cookie: string | null = null): Promise<any> {
+export async function fetchInitialData<T = any>(cookie: string | null = null): Promise<T | null> {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
   const hasCookie = cookie && cookie.length > 0;
   try {
-    return await cachedFetch(url, {
+    return await cachedFetch<T>(url, {
       headers: { Accept: 'application/json', ...(hasCookie ? { Cookie: cookie as string } : {}) },
       ...(hasCookie ? { cache: 'no-store' } : { next: { revalidate: 60 } }),
     });
@@ -181,7 +181,7 @@ export function normalizeContentColumns(content: any): Record<string, Typo3Conte
   }
 
   if (Array.isArray(content)) {
-    return { '0': content };
+    return { '0': content as Typo3ContentElement[] };
   }
 
   if (!content || typeof content !== 'object') return {};
@@ -190,22 +190,22 @@ export function normalizeContentColumns(content: any): Record<string, Typo3Conte
     const normalizedColPos = String(colPos).replace(/^colPos/i, '') || '0';
 
     if (Array.isArray(value)) {
-      columns[normalizedColPos] = value;
+      columns[normalizedColPos] = value as Typo3ContentElement[];
       return columns;
     }
 
     if (Array.isArray(value?.elements)) {
-      columns[normalizedColPos] = value.elements;
+      columns[normalizedColPos] = value.elements as Typo3ContentElement[];
       return columns;
     }
 
     if (Array.isArray(value?.content)) {
-      columns[normalizedColPos] = value.content;
+      columns[normalizedColPos] = value.content as Typo3ContentElement[];
       return columns;
     }
 
     if (value && typeof value === 'object' && (value.type || value.CType || value.id || value.uid)) {
-      columns[normalizedColPos] = [value];
+      columns[normalizedColPos] = [value as Typo3ContentElement];
       return columns;
     }
 

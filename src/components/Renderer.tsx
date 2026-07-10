@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { Typo3Page, Typo3ContentElement } from '../types/typo3';
+import { Typo3Page, Typo3ContentElement, Typo3File } from '../types/typo3';
 import { flattenContent, getBestImageUrl, normalizeMediaUrl } from '../lib/typo3';
 import { ContentElement } from './ContentElement';
 import { T3Frame } from '@pixelcoda/headless-nextjs';
@@ -61,7 +61,7 @@ export function PixelcodaSearchElement({ element }: ElementProps) {
   );
 }
 
-function getElementMedia(element: Typo3ContentElement) {
+function getElementMedia(element: Typo3ContentElement): Typo3File[] {
   const content = element.content || {};
   if (Array.isArray(content.media)) return content.media;
 
@@ -70,7 +70,7 @@ function getElementMedia(element: Typo3ContentElement) {
   
   const rowsArray = Array.isArray(rows) ? rows : Object.values(rows);
   
-  const columns: any[] = rowsArray.flatMap((row: any) => {
+  const columns: Typo3File[] = rowsArray.flatMap((row: any) => {
     const cols = row.columns || [];
     return Array.isArray(cols) ? cols : Object.values(cols);
   });
@@ -104,7 +104,7 @@ export function TextElement({ element }: ElementProps) {
         ) : null}
         {media.length ? (
           <div className="content-media">
-            {media.map((file: any, index: number) => {
+            {media.map((file: Typo3File, index: number) => {
               const src = normalizeMediaUrl(getBestImageUrl(file) || file.publicUrl);
               if (!src) return null;
               const alt = file?.properties?.alternative || file?.properties?.title || content.header || '';
@@ -133,7 +133,7 @@ function renderElement(element: Typo3ContentElement) {
     return (
       <div className="error-box" data-t3-uid={element.id} data-t3-type={element.type}>
         <h2>TYPO3 Headless Fehler</h2>
-        <p>{element.content.bodytext}</p>
+        <p>{element.content?.bodytext}</p>
         <p>Der TYPO3-Renderer hat eine Exception geliefert. Nach einem TYPO3 Cache-Flush sollte der neue Headless-Renderer greifen.</p>
       </div>
     );
@@ -162,7 +162,7 @@ export default function Renderer({ page }: RendererProps) {
   return (
     <>
       {elements.map((element) => {
-        const animationSettings = element?.content?.animationSettings || element?.animationSettings || null;
+        const animationSettings = element?.content?.animationSettings || (element as any).animationSettings || null;
         const rendered = renderElement(element);
         return (
           <div className="renderer-item" key={`${element.__colPos}-${element.id || element.__index}`}>
