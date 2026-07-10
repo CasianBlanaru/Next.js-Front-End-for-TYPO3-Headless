@@ -1,9 +1,16 @@
 "use client";
 
-export function ContentElement({ content, children }) {
+import React from 'react';
+
+interface ContentElementProps {
+  content: any;
+  children: React.ReactNode;
+}
+
+export function ContentElement({ content, children }: ContentElementProps) {
   const pixelcodaData = content?._pixelcoda;
 
-  const editingAttributes = {};
+  const editingAttributes: Record<string, any> = {};
   if (pixelcodaData?.uid) {
     editingAttributes['data-t3-uid'] = pixelcodaData.uid;
     editingAttributes['data-t3-type'] = pixelcodaData.ctype;

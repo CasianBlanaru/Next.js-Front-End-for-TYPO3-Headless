@@ -1,6 +1,8 @@
-const cleanEnv = (val) => String(val || '').replace(/^['"]|['"]$/g, '');
+import { SiteConfig } from '../types/typo3';
 
-export const siteConfig = {
+const cleanEnv = (val: string | undefined): string => String(val || '').replace(/^['"]|['"]$/g, '');
+
+export const siteConfig: SiteConfig = {
   apiBaseUrl: cleanEnv(process.env.NEXT_PUBLIC_API_BASE_URL) || 'https://web-production-581b4.up.railway.app',
   typo3BaseUrl:
     cleanEnv(process.env.TYPO3_INTERNAL_URL) ||

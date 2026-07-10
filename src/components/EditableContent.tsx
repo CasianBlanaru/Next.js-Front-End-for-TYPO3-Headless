@@ -1,7 +1,17 @@
+import React from 'react';
+
 /**
  * Headless Content Wrapper Component
  * Adds Frontend Editor markers for TYPO3 Headless content
  */
+interface EditableContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  uid: number | string;
+  table?: string;
+  field: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
 export function EditableContent({ 
   uid, 
   table = 'tt_content', 
@@ -9,9 +19,9 @@ export function EditableContent({
   children, 
   className = '',
   ...props 
-}) {
+}: EditableContentProps) {
   // Only add markers if we have required data
-  const markers = uid && field ? {
+  const markers: Record<string, any> = uid && field ? {
     'data-pc-field': '',
     'data-table': table,
     'data-uid': uid,
@@ -32,8 +42,15 @@ export function EditableContent({
 /**
  * Editable Headline Component
  */
-export function EditableHeadline({ uid, level = 'h2', children, className = '' }) {
-  const Tag = level;
+interface EditableHeadlineProps {
+  uid: number | string;
+  level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function EditableHeadline({ uid, level = 'h2', children, className = '' }: EditableHeadlineProps) {
+  const Tag = level as any;
   
   return (
     <Tag
@@ -51,7 +68,13 @@ export function EditableHeadline({ uid, level = 'h2', children, className = '' }
 /**
  * Editable Bodytext Component
  */
-export function EditableBodytext({ uid, children, className = '' }) {
+interface EditableBodytextProps {
+  uid: number | string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function EditableBodytext({ uid, children, className = '' }: EditableBodytextProps) {
   return (
     <div
       className={className}
@@ -70,7 +93,14 @@ export function EditableBodytext({ uid, children, className = '' }) {
  * Content Element Wrapper
  * Wraps entire content elements with edit markers
  */
-export function ContentElement({ uid, type, children, className = '' }) {
+interface ContentElementWrapperProps {
+  uid: number | string;
+  type: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function ContentElementWrapper({ uid, type, children, className = '' }: ContentElementWrapperProps) {
   return (
     <div 
       id={`c${uid}`}

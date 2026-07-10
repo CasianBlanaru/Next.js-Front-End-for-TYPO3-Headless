@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { siteConfig } from '../lib/config';
 
 export default function FrontendEditor() {
   const [hasBackendSession, setHasBackendSession] = useState(false);
-  const [assetHash, setAssetHash] = useState(null);
+  const [assetHash, setAssetHash] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -21,7 +21,9 @@ export default function FrontendEditor() {
 
         if (data.feEditorToken && data.ajaxUrls) {
           window.TYPO3 = window.TYPO3 || { settings: {}, security: {} };
+          window.TYPO3.settings = window.TYPO3.settings || {};
           window.TYPO3.settings.ajaxUrls = { ...window.TYPO3.settings?.ajaxUrls, ...data.ajaxUrls };
+          window.TYPO3.security = window.TYPO3.security || {};
           window.TYPO3.security.feEditorToken = data.feEditorToken;
         }
 
@@ -90,20 +92,20 @@ export default function FrontendEditor() {
       <div id="pc-fe-toolbar-root" className="pc-fe-toolbar" role="toolbar" aria-label="Frontend Editing">
         <div className="pc-fe-toolbar-actions">
           <button id="pc-edit-toggle" className="pc-fe-button" type="button" aria-label="Frontend Editing aktivieren" aria-pressed="false">
-            <img className="pc-fe-icon" src={editIconPath} alt="" onError={(e) => { e.target.hidden = true; }} />
+            <img className="pc-fe-icon" src={editIconPath} alt="" onError={(e) => { (e.target as HTMLImageElement).hidden = true; }} />
             <span>Edit</span>
           </button>
           <button id="pc-save" className="pc-fe-button pc-fe-save" type="button" aria-label="Änderungen speichern" disabled>
-            <img className="pc-fe-icon" src={editIconPath} alt="" onError={(e) => { e.target.hidden = true; }} />
+            <img className="pc-fe-icon" src={editIconPath} alt="" onError={(e) => { (e.target as HTMLImageElement).hidden = true; }} />
             <span>Save</span>
           </button>
           <span className="pc-fe-toolbar-divider" aria-hidden="true"></span>
           <button id="pc-ai" className="pc-fe-button pc-fe-ai" type="button" aria-label="AI-Schreibassistent öffnen">
-            <img className="pc-fe-icon" src={aiIconPath} alt="" onError={(e) => { e.target.hidden = true; }} />
+            <img className="pc-fe-icon" src={aiIconPath} alt="" onError={(e) => { (e.target as HTMLImageElement).hidden = true; }} />
             <span>AI</span>
           </button>
           <button id="pc-add-global" className="pc-fe-button pc-fe-icon-button" type="button" aria-label="Neues Element hinzufügen">
-            <img className="pc-fe-icon" src={addIconPath} alt="" onError={(e) => { e.target.hidden = true; }} />
+            <img className="pc-fe-icon" src={addIconPath} alt="" onError={(e) => { (e.target as HTMLImageElement).hidden = true; }} />
           </button>
         </div>
         <div className="pc-fe-toolbar-feedback">

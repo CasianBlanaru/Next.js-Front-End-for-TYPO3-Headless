@@ -1,9 +1,10 @@
 import { siteConfig } from './config';
+import { Typo3Page, Typo3ContentElement } from '../types/typo3';
 
-const memCache = new Map();
+const memCache = new Map<string, { ts: number; data: any }>();
 const MEM_TTL = 30_000;
 
-async function cachedFetch(url, options) {
+async function cachedFetch(url: string, options?: RequestInit) {
   const now = Date.now();
   const hit = memCache.get(url);
   if (hit && now - hit.ts < MEM_TTL) return hit.data;
@@ -12,7 +13,7 @@ async function cachedFetch(url, options) {
     ? new URL(process.env.NEXT_PUBLIC_TYPO3_BASE_URL).host
     : null;
 
-  const extraHeaders = publicHost
+  const extraHeaders: Record<string, string> = publicHost
     ? { Host: publicHost, 'X-Forwarded-Proto': 'https', 'X-Forwarded-Host': publicHost }
     : {};
 
@@ -38,13 +39,13 @@ async function cachedFetch(url, options) {
   throw new Error(`TYPO3 API 429 for ${url}: rate limited`);
 }
 
-function joinUrl(base, path = '/') {
+function joinUrl(base: string, path: string = '/') {
   const cleanBase = String(base || '').replace(/\/$/, '');
   const cleanPath = path === '/' ? '/' : `/${String(path).replace(/^\/+/, '')}`;
   return `${cleanBase}${cleanPath}`;
 }
 
-function toQueryString(searchParams) {
+function toQueryString(searchParams: Record<string, any> | null) {
   if (!searchParams) return '';
 
   const params = new URLSearchParams();
@@ -63,19 +64,19 @@ function toQueryString(searchParams) {
   return query ? `?${query}` : '';
 }
 
-export function normalizePath(slug) {
+export function normalizePath(slug: string | string[] | undefined): string {
   if (!slug || slug.length === 0) return '/';
   if (Array.isArray(slug)) return `/${slug.join('/')}`;
   return String(slug).startsWith('/') ? String(slug) : `/${slug}`;
 }
 
-export function normalizeMediaUrl(value) {
+export function normalizeMediaUrl(value: string | undefined): string {
   if (!value) return '';
   if (value.startsWith('data:') || value.startsWith('blob:')) return value;
 
   // If it's already an absolute URL, return as-is
   try {
-    const url = new URL(value);
+    new URL(value);
     return value;
   } catch {
     // Relative path - prepend TYPO3 base URL
@@ -85,7 +86,7 @@ export function normalizeMediaUrl(value) {
   }
 }
 
-export function getBestImageUrl(file) {
+export function getBestImageUrl(file: any): string {
   return (
     file?.cropVariants?.default?.publicUrl ||
     file?.publicUrl ||
@@ -95,11 +96,11 @@ export function getBestImageUrl(file) {
   );
 }
 
-export async function fetchPageData(path = '/', searchParams = null, cookie = null) {
+export async function fetchPageData(path: string = '/', searchParams: Record<string, any> | null = null, cookie: string | null = null): Promise<any> {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
   // Strip search params that trigger cHash validation in TYPO3
-  const cleanSearchParams = { ...searchParams };
+  const cleanSearchParams = searchParams ? { ...searchParams } : {};
   if (cleanSearchParams) {
     delete cleanSearchParams.q;
     delete cleanSearchParams.collections;
@@ -118,14 +119,14 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
     const publicHost = process.env.NEXT_PUBLIC_TYPO3_BASE_URL
       ? new URL(process.env.NEXT_PUBLIC_TYPO3_BASE_URL).host
       : null;
-    const extraHeaders = publicHost
+    const extraHeaders: Record<string, string> = publicHost
       ? { Host: publicHost, 'X-Forwarded-Proto': 'https', 'X-Forwarded-Host': publicHost }
       : {};
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
     try {
       const response = await fetch(url, {
-        headers: { Accept: 'application/json', Cookie: cookie, ...extraHeaders },
+        headers: { Accept: 'application/json', Cookie: cookie as string, ...extraHeaders },
         cache: 'no-store',
         signal: controller.signal,
       });
@@ -135,7 +136,7 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
         throw new Error(`TYPO3 API ${response.status} for ${url}${text ? `: ${text.slice(0, 200)}` : ''}`);
       }
       return response.json();
-    } catch (error) {
+    } catch (error: any) {
       clearTimeout(timeoutId);
       if (error.name === 'AbortError') throw new Error(`TYPO3 API timeout after 10s for ${url}`);
       throw error;
@@ -148,27 +149,27 @@ export async function fetchPageData(path = '/', searchParams = null, cookie = nu
   });
 }
 
-export async function fetchInitialData(cookie = null) {
+export async function fetchInitialData(cookie: string | null = null): Promise<any> {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
   const hasCookie = cookie && cookie.length > 0;
   try {
     return await cachedFetch(url, {
-      headers: { Accept: 'application/json', ...(hasCookie ? { Cookie: cookie } : {}) },
+      headers: { Accept: 'application/json', ...(hasCookie ? { Cookie: cookie as string } : {}) },
       ...(hasCookie ? { cache: 'no-store' } : { next: { revalidate: 60 } }),
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('fetchInitialData error:', error.message);
     return null;
   }
 }
 
-export function normalizeContentColumns(content) {
+export function normalizeContentColumns(content: any): Record<string, Typo3ContentElement[]> {
   if (typeof content === 'string') {
     const html = content.trim();
     return html
       ? {
-          html: [
+          '0': [
             {
               id: 'html-content',
               type: 'html',
@@ -185,7 +186,7 @@ export function normalizeContentColumns(content) {
 
   if (!content || typeof content !== 'object') return {};
 
-  return Object.entries(content).reduce((columns, [colPos, value]) => {
+  return Object.entries(content).reduce((columns: Record<string, Typo3ContentElement[]>, [colPos, value]: [string, any]) => {
     const normalizedColPos = String(colPos).replace(/^colPos/i, '') || '0';
 
     if (Array.isArray(value)) {
@@ -224,7 +225,7 @@ export function normalizeContentColumns(content) {
   }, {});
 }
 
-export function normalizePageData(page) {
+export function normalizePageData(page: any): Typo3Page {
   if (!page || typeof page !== 'object') return page;
   const content =
     page.content ??
@@ -241,7 +242,7 @@ export function normalizePageData(page) {
   };
 }
 
-export function flattenContent(content) {
+export function flattenContent(content: any): Typo3ContentElement[] {
   return Object.entries(normalizeContentColumns(content))
     .sort(([a], [b]) => a.localeCompare(b))
     .flatMap(([colPos, elements]) =>
