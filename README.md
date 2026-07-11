@@ -1,235 +1,135 @@
-# @pixelcoda/headless-nextjs Frontend
+# TYPO3 Headless Next.js Frontend
 
-Production-ready Next.js 16 frontend for TYPO3 Headless CMS with Server Components, visual editing, and GSAP animations.
+![TYPO3](https://img.shields.io/badge/TYPO3-v12%2Fv13-orange?logo=typo3)
+![Next.js](https://img.shields.io/badge/Next.js-v15%2B-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
+[![CI](https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless/actions/workflows/ci.yml/badge.svg)](https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless/actions/workflows/ci.yml)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+The most professional, production-ready, open-source Next.js frontend for **TYPO3 Headless**. Built with modern best practices for React 19, TypeScript, and the TYPO3 ecosystem.
+
+---
 
 ## 🚀 Features
 
-- **Next.js 16** with React 19 Server Components
-- **TYPO3 Headless** integration via JSON API
-- **Visual Editing** with frontend toolbar (`@pixelcoda/fe-editor`)
-- **GSAP Animations** for content elements
-- **Premium Skin System** with customizable themes
-- **DevTools Overlay** for debugging (CMD/CTRL + SHIFT + H)
-- **Railway Deployment** ready with optimized production build
+- **TYPO3 Headless Integration**: Seamlessly renders content from the [TYPO3 Headless extension](https://github.com/friendsoftypo3/headless).
+- **Dynamic Routing**: Automatic slug resolution for TYPO3 pages.
+- **Frontend Editing**: Real-time content editing support directly in the frontend.
+- **Advanced Search**: Integrated search functionality with faceting and KI support.
+- **SEO Optimized**: Dynamic metadata, OpenGraph, Twitter cards, and sitemap generation.
+- **Image Optimization**: Automatic image processing via TYPO3 and Next.js Image.
+- **GSAP Animations**: Smooth, high-performance animations for content elements.
+- **TypeScript**: 100% type-safe codebase with strict mode enabled.
+- **Enterprise Testing**: Robust testing suite with Vitest and Playwright.
 
-## 📦 Installation
+---
+
+## 🏗️ Architecture
+
+The project follows a modular architecture that separates the API communication, content rendering, and UI components.
+
+```mermaid
+graph TD
+    T[TYPO3 Backend] -->|JSON API| H[Headless Extension]
+    H -->|API Calls| C[API Client / Typo3 Lib]
+    C -->|Typed Data| R[Renderer]
+    R -->|Component Mapping| PC[React Components]
+    PC -->|Next.js App Router| W[Web Browser]
+```
+
+### Core Components
+
+1.  **API Client (`src/lib/typo3.ts`)**: Handles all communication with the TYPO3 Headless API, including caching and authentication.
+2.  **Renderer (`src/components/Renderer.tsx`)**: Maps TYPO3 content elements (CTypes) to React components.
+3.  **App Router**: Utilizes Next.js 15+ features for server-side rendering and metadata management.
+
+---
+
+## 📦 Relationship with `@pixelcoda/headless-nextjs`
+
+This repository serves as a **reference implementation** and starter template that utilizes the core logic provided by the `@pixelcoda/headless-nextjs` package.
+
+-   **`@pixelcoda/headless-nextjs`**: Contains shared logic, base components (like `T3Frame`), and developer tools. It is designed to be version-independent and reusable across multiple TYPO3 projects.
+-   **This Repository**: Provides the project-specific configuration, layout, styling, and custom component implementations. It is the "glue" that brings the package features into a concrete website.
+
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+-   Node.js 22.0.0 or higher
+-   A running TYPO3 instance with `ext:headless` and `ext:headless_typo3` installed.
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/CasianBlanaru/Next.js-Front-End-for-TYPO3-Headless.git
+cd Next.js-Front-End-for-TYPO3-Headless
+
+# Install dependencies
 npm install
-# or
-yarn install
 ```
 
-## 🔧 Configuration
+### Configuration
 
-Create `.env.local` from `.env.example`:
+Copy `.env.example` to `.env.local` and update the values:
 
 ```env
-# TYPO3 Backend API URL
-NEXT_PUBLIC_API_BASE_URL=https://your-typo3-backend.com
-NEXT_PUBLIC_TYPO3_BASE_URL=https://your-typo3-backend.com
-
-# Frontend URL
-NEXT_PUBLIC_BASE_URL=https://your-frontend.com
-
-# File serving endpoint
-NEXT_PUBLIC_FRONTEND_FILE_API=/fileadmin
-
-# Optional: Enable DevTools overlay
-NEXT_PUBLIC_HEADLESS_DEVTOOLS=true
-
-# Optional: Skin selection
-NEXT_PUBLIC_SKIN=premium
+NEXT_PUBLIC_TYPO3_BASE_URL=https://your-typo3-instance.com
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-## 🏗️ Project Structure
-
-```
-src/
-├── app/
-│   ├── page.jsx              # Homepage
-│   ├── suche/page.jsx        # Search page
-│   └── [...slug]/page.jsx    # Dynamic TYPO3 pages
-├── components/
-│   ├── Renderer.jsx          # Content element renderer
-│   ├── DevTools.jsx          # Debug overlay
-│   └── ...
-└── lib/
-    ├── config.js             # Environment config
-    └── typo3.js              # TYPO3 API utilities
-```
-
-## 🛠️ Development
-
-Start the development server:
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+---
 
-### DevTools
+## 🧪 Testing
 
-Press **CMD + SHIFT + H** (macOS) or **CTRL + SHIFT + H** (Windows/Linux) to toggle the debug overlay when `NEXT_PUBLIC_HEADLESS_DEVTOOLS=true`.
-
-## 🚢 Production
-
-Build and start production server:
+We take quality seriously. The project includes unit, component, and E2E tests.
 
 ```bash
-npm run build
-npm start
+# Run unit tests
+npm test
+
+# Run type check
+npm run typecheck
+
+# Run E2E tests
+npx playwright test
 ```
 
-## 📝 Content Rendering
+---
 
-The `Renderer` component automatically maps TYPO3 content elements to React components:
+## 🚢 Deployment
 
-- `text`, `textpic`, `textmedia` → `TextElement`
-- `pixelcodasearch_search` → `PixelcodaSearchElement`
-- Custom types → Fallback to `TextElement`
+### Vercel / Railway / Docker
 
-### Example Content Element
+The project is optimized for modern cloud platforms and includes a `Dockerfile` for containerized environments.
 
-```jsx
-import { T3Frame } from '@pixelcoda/headless-nextjs';
-
-export function TextElement({ element }) {
-  const content = element.content || {};
-  
-  return (
-    <T3Frame 
-      id={`c${element.id}`} 
-      frameClass={element.appearance?.frameClass}
-    >
-      <article>
-        {content.header && <h2>{content.header}</h2>}
-        {content.bodytext && (
-          <div dangerouslySetInnerHTML={{ __html: content.bodytext }} />
-        )}
-      </article>
-    </T3Frame>
-  );
-}
+```bash
+docker build -t typo3-nextjs-frontend .
 ```
 
-## 🔍 Search Integration
+---
 
-Built-in search page at `/suche` with:
-- PixelCoda Search API integration
-- AI-powered answers
-- Faceted filtering
-- Pagination
+## 🗺️ Roadmap
 
-## 🎨 GSAP Animations
+- [ ] Support for TYPO3 14 LTS
+- [ ] Advanced form rendering with `ext:form`
+- [ ] Multi-language switcher component
+- [ ] Improved documentation for custom CTypes
+- [ ] Lighthouse Performance > 98 target
 
-Content elements support GSAP scroll-triggered animations configured in TYPO3 backend via `pixelcoda/content-gsap-animation` extension.
-
-## 🖼️ Image Handling
-
-Images from TYPO3 are automatically served with:
-- Lazy loading
-- Responsive dimensions
-- Alt text from TYPO3 metadata
-- Gallery support with multiple columns
-
-## 🔗 TYPO3 Requirements
-
-### Required Extensions
-- `friendsoftypo3/headless` ^5.0
-- `pixelcoda/fe-editor` (optional, for visual editing)
-- `pixelcoda/typo3-search` (optional, for search)
-- `pixelcoda/content-gsap-animation` (optional, for animations)
-
-### Site Configuration
-
-Configure TYPO3 site in `config/sites/main/config.yaml`:
-
-```yaml
-base: 'https://your-frontend.com/'
-rootPageId: 2
-websiteTitle: 'Your Site'
-```
-
-### TypoScript Template
-
-Create a TypoScript template on the root page with:
-- Include: `Fluid Content Elements (fluid_styled_content)`
-- Include: `Headless (headless)`
-
-## 🚀 Deployment
-
-### Railway
-
-1. Connect GitHub repository
-2. Set environment variables in Railway dashboard
-3. Deploy automatically on push to `main`
-
-### Vercel / Netlify
-
-1. Import repository
-2. Configure environment variables
-3. Build command: `npm run build`
-4. Start command: `npm start`
-
-## 📚 API Reference
-
-### fetchPageData(path, searchParams, cookie)
-
-Fetch TYPO3 page data:
-
-```javascript
-import { fetchPageData } from '../lib/typo3';
-
-const page = await fetchPageData('/', null, cookie);
-```
-
-### normalizeMediaUrl(url)
-
-Normalize TYPO3 media URLs:
-
-```javascript
-import { normalizeMediaUrl } from '../lib/typo3';
-
-const imageUrl = normalizeMediaUrl(file.publicUrl);
-```
-
-### getBestImageUrl(file)
-
-Extract best image URL from TYPO3 file object:
-
-```javascript
-import { getBestImageUrl } from '../lib/typo3';
-
-const src = getBestImageUrl(file);
-```
-
-## 🐛 Troubleshooting
-
-### "The requested page does not exist"
-- Check `rootPageId` in TYPO3 site config
-- Verify TypoScript template is configured
-- Clear TYPO3 caches
-
-### Images not loading
-- Verify `NEXT_PUBLIC_TYPO3_BASE_URL` is correct
-- Check TYPO3 fileadmin permissions
-- Confirm images exist in `/fileadmin/`
-
-### UTF-8 encoding issues
-- Ensure TYPO3 database uses `utf8mb4` charset
-- Check MySQL connection charset setting
+---
 
 ## 📄 License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔗 Links
-
-- [TYPO3 Headless](https://github.com/TYPO3-Headless/headless)
-- [@pixelcoda/headless-nextjs](https://www.npmjs.com/package/@pixelcoda/headless-nextjs)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Demo Site](https://nextjs-front-end-for-typo3-headless-production.up.railway.app/)
+Developed with ❤️ by [PixelCoda](https://pixelcoda.com).
