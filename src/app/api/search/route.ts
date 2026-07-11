@@ -1,6 +1,7 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { siteConfig } from '../../../lib/config';
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get('q') || '';
   const collections = searchParams.get('collections') || '';
@@ -8,7 +9,7 @@ export async function GET(request) {
   const perPage = searchParams.get('per_page') || '10';
 
   if (!q || q.length < 3) {
-    return Response.json({
+    return NextResponse.json({
       data: [],
       meta: {
         total: 0,
@@ -37,12 +38,12 @@ export async function GET(request) {
     }
 
     const data = await res.json();
-    return Response.json(data);
-  } catch (error) {
+    return NextResponse.json(data);
+  } catch (error: any) {
     console.error("Next.js Search API error:", error);
 
     // Fallback response with a clear message as requested by the user
-    return Response.json({
+    return NextResponse.json({
       data: [],
       meta: {
         total: 0,

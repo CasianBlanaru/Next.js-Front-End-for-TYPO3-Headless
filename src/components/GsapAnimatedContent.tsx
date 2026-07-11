@@ -1,9 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export function GsapAnimatedContent({ children, animationSettings, ...props }) {
-  const elementRef = useRef(null);
+interface AnimationSettings {
+  animation: string;
+  duration?: number;
+  delay?: number;
+  easing?: string;
+  offset?: number;
+  anchorPlacement?: string;
+  once?: boolean;
+}
+
+interface GsapAnimatedContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  animationSettings: AnimationSettings;
+}
+
+export function GsapAnimatedContent({ children, animationSettings, ...props }: GsapAnimatedContentProps) {
+  const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!animationSettings?.animation || typeof window === 'undefined') {
@@ -17,8 +32,8 @@ export function GsapAnimatedContent({ children, animationSettings, ...props }) {
         const gsapModule = await import('gsap');
         const scrollTriggerModule = await import('gsap/ScrollTrigger');
         
-        const gsap = gsapModule.default || gsapModule;
-        const ScrollTrigger = scrollTriggerModule.default || scrollTriggerModule;
+        const gsap = (gsapModule as any).default || gsapModule;
+        const ScrollTrigger = (scrollTriggerModule as any).default || scrollTriggerModule;
 
         gsap.registerPlugin(ScrollTrigger);
 
@@ -47,7 +62,7 @@ export function GsapAnimatedContent({ children, animationSettings, ...props }) {
           },
         };
 
-        let anim;
+        let anim: any;
         switch (animation) {
           case 'fade':
             anim = gsap.from(element, { ...animationConfig, opacity: 0 });
@@ -98,7 +113,7 @@ export function GsapAnimatedContent({ children, animationSettings, ...props }) {
 
         cleanup = () => {
           if (anim) anim.kill();
-          ScrollTrigger.getAll().forEach(st => st.kill());
+          ScrollTrigger.getAll().forEach((st: any) => st.kill());
         };
       } catch (error) {
         console.warn('GSAP animation failed to load:', error);

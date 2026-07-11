@@ -1,11 +1,12 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { siteConfig } from '../../../lib/config';
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get('q') || '';
 
   if (!q || q.length < 2) {
-    return Response.json([]);
+    return NextResponse.json([]);
   }
 
   const typo3Origin = siteConfig.typo3BaseUrl.replace(/\/$/, '');
@@ -24,9 +25,9 @@ export async function GET(request) {
     }
 
     const data = await response.json();
-    return Response.json(data);
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Next.js Suggest API error:', error);
-    return Response.json([]);
+    return NextResponse.json([]);
   }
 }

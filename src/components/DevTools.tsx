@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DevToolsWrapper } from '@pixelcoda/headless-nextjs';
 import { normalizeContentColumns } from '../lib/typo3';
+import { Typo3Page } from '../types/typo3';
 
-export default function DevTools({ page }) {
+interface DevToolsProps {
+  page: Typo3Page | any;
+}
+
+export default function DevTools({ page }: DevToolsProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

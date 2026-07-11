@@ -1,3 +1,4 @@
+import React from 'react';
 import './globals.css';
 import FrontendEditor from '../components/FrontendEditor';
 
@@ -6,7 +7,7 @@ export const metadata = {
   description: 'Next.js frontend for TYPO3 Headless powered by PixelCoda.',
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de" suppressHydrationWarning>
       <body>

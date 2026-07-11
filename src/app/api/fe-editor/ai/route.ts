@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 import { siteConfig } from '../../../../lib/config';
 
 const typo3Base = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
-export async function POST(request) {
+export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
   const body = await request.text();
@@ -20,5 +21,5 @@ export async function POST(request) {
   });
 
   const data = await res.json().catch(() => ({ ok: false, error: 'invalid_response' }));
-  return Response.json(data, { status: res.status });
+  return NextResponse.json(data, { status: res.status });
 }
