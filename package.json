@@ -13,6 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "echo \"Skipping lint due to environment issues\""
+    "lint": "echo \"Skipping lint due to environment issues\"",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "@pixelcoda/headless-nextjs": "^1.1.4",
@@ -28,12 +30,14 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^26.1.1",
+    "@types/node": "26.1.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/coverage-v8": "^4.1.10",
     "jsdom": "^29.1.1",
     "typescript": "7.0.2",
+    "undici-types": "8.3.0",
     "vitest": "^4.1.10"
   }
 }
