@@ -208,7 +208,7 @@ export default async function SuchePage({ searchParams }: Props) {
                 >
                   <h2>Keine Ergebnisse in dieser Kategorie</h2>
                   <p>
-                    Es wurden keine Suchergebnisse für die ausgewählte Kategorie &quot;{activeType === 'page' ? 'Seiten' : 'Inhalte'}&quot; gefunden.
+                    Es wurden keine Suchergebnisse für die ausgewählte Kategorie {'“'}{activeType === 'page' ? 'Seiten' : 'Inhalte'}{'”'} gefunden.
                   </p>
                 </div>
               )}
