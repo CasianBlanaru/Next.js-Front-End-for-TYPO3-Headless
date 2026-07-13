@@ -68,11 +68,11 @@ async function handleRevalidate(request: NextRequest) {
   }
 
   for (const tag of revalidatedTags) {
-    revalidateTag(tag);
+    revalidateTag(tag, 'default');
   }
 
   if (revalidatedPaths.length === 0 && revalidatedTags.size === 0) {
-    revalidateTag('typo3');
+    revalidateTag('typo3', 'default');
     revalidatedTags.add('typo3');
   }
 

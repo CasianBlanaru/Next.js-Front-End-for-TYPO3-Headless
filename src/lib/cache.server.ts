@@ -6,6 +6,6 @@ export function revalidateTypo3Path(path: string): void {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   revalidatePath(normalizedPath === '//' ? '/' : normalizedPath);
   for (const tag of buildCacheTags(normalizedPath)) {
-    revalidateTag(tag);
+    revalidateTag(tag, 'default');
   }
 }
