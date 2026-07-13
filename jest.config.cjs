@@ -11,6 +11,7 @@ module.exports = {
     '^@types$': '<rootDir>/src/types/index',
     '^@types/(.*)$': '<rootDir>/src/types/$1',
     '^next/dynamic$': '<rootDir>/jest.mocks/next-dynamic.cjs',
+    '^@pixelcoda/headless-nextjs$': '<rootDir>/src/index',
   },
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
