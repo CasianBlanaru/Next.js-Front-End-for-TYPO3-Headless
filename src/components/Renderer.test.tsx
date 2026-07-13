@@ -1,16 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Renderer from './Renderer';
 import { Typo3Page } from '../types/typo3';
 
-// Mocking @pixelcoda/headless-nextjs to avoid import issues in Vitest
-vi.mock('@pixelcoda/headless-nextjs', () => ({
+jest.mock('@pixelcoda/headless-nextjs', () => ({
   T3Frame: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DevToolsWrapper: () => <div>DevTools</div>,
 }));
 
-// Mocking GsapAnimatedContent
-vi.mock('./GsapAnimatedContent', () => ({
+jest.mock('./GsapAnimatedContent', () => ({
   GsapAnimatedContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 

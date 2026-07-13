@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest';
 import { normalizePath, normalizeMediaUrl, getBestImageUrl, normalizeContentColumns } from './typo3';
 import { Typo3File } from '../types/typo3';
 
