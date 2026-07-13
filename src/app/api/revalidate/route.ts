@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
-import { buildCacheTags, revalidateTypo3Path } from '../../../lib/cache';
+import { buildCacheTags } from '../../../lib/cache';
+import { revalidateTypo3Path } from '../../../lib/cache.server';
 
 type RevalidatePayload = {
   path?: string;
@@ -67,11 +68,11 @@ async function handleRevalidate(request: NextRequest) {
   }
 
   for (const tag of revalidatedTags) {
-    revalidateTag(tag, {});
+    revalidateTag(tag);
   }
 
   if (revalidatedPaths.length === 0 && revalidatedTags.size === 0) {
-    revalidateTag('typo3', {});
+    revalidateTag('typo3');
     revalidatedTags.add('typo3');
   }
 
