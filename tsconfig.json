@@ -29,7 +29,8 @@
       "@styles/*": ["./src/styles/*"],
       "@config/*": ["./src/config/*"],
       "@types": ["./src/types/index"],
-      "@types/*": ["./src/types/*"]
+      "@types/*": ["./src/types/*"],
+      "@pixelcoda/headless-nextjs": ["./src/index"]
     },
     "plugins": [
       {
@@ -49,6 +50,8 @@
     "node_modules",
     "dist",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "vitest.config.ts",
+    "src/test"
   ]
 }
