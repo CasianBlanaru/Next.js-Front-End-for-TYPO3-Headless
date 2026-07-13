@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="TYPO3 Headless PWA Demo icon">
+  <rect width="120" height="120" rx="24" fill="#0b61ff" />
+  <circle cx="60" cy="60" r="32" fill="#ffffff" />
+  <path d="M56 38h8v44h-8z" fill="#0b61ff" />
+  <path d="M49 61h22v8H49z" fill="#0b61ff" />
+</svg>

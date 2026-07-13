@@ -1,0 +1,11 @@
+yarnPath: .yarn/releases/yarn-4.17.0.cjs
+nodeLinker: node-moducacheFolder: /Users/casian/yarn-cache
+
+npmRegistryServer: "https://registry.npmjs.org"
+
+npmScopes:
+  pixelcoda:
+    npmRegistryServer: "https://registry.npmjs.org"
+
+yarnPath: .yarn/releases/yarn-4.17.0.cjs
+

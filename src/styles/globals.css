@@ -1,0 +1,40 @@
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100 text-gray-900;
+}
+
+a {
+  @apply text-blue-500 hover:text-blue-700;
+}
+
+
+
+/* PixelCoda Headless DevTools hooks */
+.pixelcoda-t3-element {
+  position: relative;
+}
+
+.pixelcoda-t3-element:hover {
+  outline: 2px dashed rgb(249 115 22 / 0.85);
+  outline-offset: 4px;
+}
+
+.pixelcoda-t3-element:hover::before {
+  content: 'UID ' attr(data-t3-uid) ' · ' attr(data-t3-type);
+  position: absolute;
+  top: -1.75rem;
+  left: 0;
+  z-index: 50;
+  border-radius: 999px;
+  background: rgb(15 23 42);
+  color: white;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  pointer-events: none;
+  box-shadow: 0 10px 25px rgb(15 23 42 / 0.2);
+}
