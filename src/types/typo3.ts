@@ -33,7 +33,7 @@ export interface Typo3ContentElement {
     html?: string;
     media?: Typo3File[];
     gallery?: {
-      rows?: Record<string, { columns: Record<string, Typo3File> }> | any[];
+      rows?: Record<string, { columns: Record<string, Typo3File> }> | unknown[];
     };
     searchConfig?: {
       placeholder?: string;
@@ -52,7 +52,7 @@ export interface Typo3ContentElement {
       anchorPlacement?: string;
       once?: boolean;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
   appearance?: {
     frameClass?: string;
@@ -69,7 +69,7 @@ export interface Typo3ContentElement {
   };
   __colPos?: string;
   __index?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface Typo3Page {
@@ -87,7 +87,7 @@ export interface Typo3Page {
     abstract?: string;
   };
   content?: Record<string, Typo3ContentElement[]>;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface Typo3SearchResult {

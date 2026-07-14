@@ -1,22 +1,13 @@
-const path = require("path");
-
-module.exports = {
-  reactStrictMode: true,
-
-  turbopack: {
-    root: path.resolve(__dirname),
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
   },
-
-  allowedDevOrigins: [
-    "nextjs-demo.ddev.site",
-    "api.nextjs-demo.ddev.site",
-    "pwa-demo.ddev.site",
-    "api.pwa-demo.ddev.site",
-    "localhost",
-    "127.0.0.1",
-  ],
-
-  images: {
-    unoptimized: true,
-  },
+  ...(process.env.NODE_ENV !== 'production' && {
+    turbopack: {
+      root: __dirname,
+    },
+  }),
 };
+
+module.exports = nextConfig;

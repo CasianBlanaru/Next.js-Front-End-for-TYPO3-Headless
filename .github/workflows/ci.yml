@@ -2,80 +2,56 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, master ]
   pull_request:
+    branches: [ main, master ]
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
 
-      - name: Enable Corepack
-        run: corepack enable
+    - name: Debug Environment
+      run: |
+        node -v
+        npm -v
+        cat package.json
 
-      - name: Install dependencies
-        run: yarn install --immutable
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Lint
-        run: yarn lint
+    - name: Typecheck
+      run: npm run typecheck
 
-      - name: Typecheck
-        run: yarn typecheck
+    - name: Unit Tests
+      run: npm test
 
-      - name: Unit Tests
-        run: yarn test
+    - name: Build
+      run: npm run build
 
-      - name: Build
-        run: yarn build
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Lint
+      run: npm run lint
 
-  release:
-    needs: validate
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Run Playwright tests
+      run: npx playwright test
+      env:
+        PORT: 3000
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install dependencies
-        run: yarn install --immutable
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build
-        run: yarn build
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish to npm
-        run: yarn npm publish --access public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30

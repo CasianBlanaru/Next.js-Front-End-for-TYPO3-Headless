@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import { Typo3Page, Typo3ContentElement, Typo3File } from '../types/typo3';
 import { flattenContent, getBestImageUrl, normalizeMediaUrl } from '../lib/typo3';
@@ -21,12 +21,12 @@ interface ElementProps {
 }
 
 function isTypo3Error(element: Typo3ContentElement) {
-  const bodytext = element?.content?.bodytext || element?.content?.html || '';
+  const bodytext = (element?.content as any)?.bodytext || (element?.content as any)?.html || '';
   return typeof bodytext === 'string' && bodytext.startsWith('Oops, an error occurred!');
 }
 
 export function PixelcodaSearchElement({ element }: ElementProps) {
-  const content = element.content || {};
+  const content = (element.content as any) || {};
   const config = content.searchConfig || {};
   const ui = content.ui || {};
   const placeholder = config.placeholder || content.placeholder || 'Website durchsuchen...';
@@ -48,8 +48,8 @@ export function PixelcodaSearchElement({ element }: ElementProps) {
           {content.subheader ? <p>{content.subheader}</p> : null}
         </header>
         <form className="pixelcoda-search-form" action="/suche" method="get">
-          <input type="search" name="q" placeholder={placeholder} aria-label={placeholder} />
-          <input type="hidden" name="collections" value={collections} />
+          <input type="search" name="q" placeholder={placeholder as string} aria-label={placeholder as string} />
+          <input type="hidden" name="collections" value={collections as string} />
           <button type="submit">Suchen</button>
         </form>
         {ui.showAsk || config.enableAsk ? (
@@ -62,7 +62,7 @@ export function PixelcodaSearchElement({ element }: ElementProps) {
 }
 
 function getElementMedia(element: Typo3ContentElement): Typo3File[] {
-  const content = element.content || {};
+  const content = (element.content as any) || {};
   if (Array.isArray(content.media)) return content.media;
 
   const rows = content.gallery?.rows;
@@ -79,7 +79,7 @@ function getElementMedia(element: Typo3ContentElement): Typo3File[] {
 }
 
 export function TextElement({ element }: ElementProps) {
-  const content = element.content || {};
+  const content = (element.content as any) || {};
   const media = getElementMedia(element);
 
   return (
@@ -107,7 +107,7 @@ export function TextElement({ element }: ElementProps) {
             {media.map((file: Typo3File, index: number) => {
               const src = normalizeMediaUrl(getBestImageUrl(file) || file.publicUrl);
               if (!src) return null;
-              const alt = file?.properties?.alternative || file?.properties?.title || content.header || '';
+              const alt = (file?.properties as any)?.alternative || (file?.properties as any)?.title || content.header || '';
               return <img key={`${src}-${index}`} src={src} alt={alt} loading="lazy" />;
             })}
           </div>
@@ -133,7 +133,7 @@ function renderElement(element: Typo3ContentElement) {
     return (
       <div className="error-box" data-t3-uid={element.id} data-t3-type={element.type}>
         <h2>TYPO3 Headless Fehler</h2>
-        <p>{element.content?.bodytext}</p>
+        <p>{(element.content as any)?.bodytext}</p>
         <p>Der TYPO3-Renderer hat eine Exception geliefert. Nach einem TYPO3 Cache-Flush sollte der neue Headless-Renderer greifen.</p>
       </div>
     );
@@ -162,7 +162,7 @@ export default function Renderer({ page }: RendererProps) {
   return (
     <>
       {elements.map((element) => {
-        const animationSettings = element?.content?.animationSettings || (element as any).animationSettings || null;
+        const animationSettings = (element?.content as any)?.animationSettings || (element as any).animationSettings || null;
         const rendered = renderElement(element);
         return (
           <div className="renderer-item" key={`${element.__colPos}-${element.id || element.__index}`}>

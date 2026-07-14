@@ -1,27 +1,18 @@
-import type { ReactNode } from 'react';
-import '@styles/globals.css';
-import ServiceWorkerRegistration from '@components/layout/ServiceWorkerRegistration';
-import SkipToContent from '@components/layout/SkipToContent';
-import { getSiteUrl } from '@services/api';
+import React from 'react';
+import './globals.css';
+import FrontendEditor from '../components/FrontendEditor';
 
 export const metadata = {
-  title: 'TYPO3 Headless Next.js Frontend',
-  description: 'Standalone headless frontend for TYPO3 using Next.js App Router.',
-  metadataBase: getSiteUrl() ? new URL(getSiteUrl()) : undefined,
-  icons: {
-    icon: '/icons/icon.svg',
-    apple: '/icons/icon.svg',
-  },
-  manifest: '/manifest.webmanifest',
+  title: 'PixelCoda TYPO3 Headless Frontend',
+  description: 'Next.js frontend for TYPO3 Headless powered by PixelCoda.',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased">
-        <SkipToContent />
+    <html lang="de" suppressHydrationWarning>
+      <body>
         {children}
-        <ServiceWorkerRegistration />
+        <FrontendEditor />
       </body>
     </html>
   );

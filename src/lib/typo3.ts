@@ -4,6 +4,12 @@ import { Typo3Page, Typo3ContentElement, Typo3File } from '../types/typo3';
 const memCache = new Map<string, { ts: number; data: any }>();
 const MEM_TTL = 30_000;
 
+/**
+ * Fetches data with a short-lived memory cache and retry logic.
+ * @param url The URL to fetch.
+ * @param options Standard fetch options.
+ * @returns The parsed JSON response.
+ */
 async function cachedFetch<T = any>(url: string, options?: RequestInit): Promise<T> {
   const now = Date.now();
   const hit = memCache.get(url);
@@ -39,12 +45,18 @@ async function cachedFetch<T = any>(url: string, options?: RequestInit): Promise
   throw new Error(`TYPO3 API 429 for ${url}: rate limited`);
 }
 
+/**
+ * Joins a base URL with a path safely.
+ */
 function joinUrl(base: string, path: string = '/') {
   const cleanBase = String(base || '').replace(/\/$/, '');
   const cleanPath = path === '/' ? '/' : `/${String(path).replace(/^\/+/, '')}`;
   return `${cleanBase}${cleanPath}`;
 }
 
+/**
+ * Converts a record of search params to a query string.
+ */
 function toQueryString(searchParams: Record<string, any> | null) {
   if (!searchParams) return '';
 
@@ -64,12 +76,18 @@ function toQueryString(searchParams: Record<string, any> | null) {
   return query ? `?${query}` : '';
 }
 
+/**
+ * Normalizes a slug or slug array into a standard path string.
+ */
 export function normalizePath(slug: string | string[] | undefined): string {
   if (!slug || slug.length === 0) return '/';
   if (Array.isArray(slug)) return `/${slug.join('/')}`;
   return String(slug).startsWith('/') ? String(slug) : `/${slug}`;
 }
 
+/**
+ * Normalizes a media URL, prepending the TYPO3 base URL if it's a relative path.
+ */
 export function normalizeMediaUrl(value: string | undefined): string {
   if (!value) return '';
   if (value.startsWith('data:') || value.startsWith('blob:')) return value;
@@ -86,6 +104,9 @@ export function normalizeMediaUrl(value: string | undefined): string {
   }
 }
 
+/**
+ * Extracts the best available image URL from a TYPO3 file object, prioritizing crops.
+ */
 export function getBestImageUrl(file: Typo3File | undefined): string {
   return (
     file?.cropVariants?.default?.publicUrl ||
@@ -96,6 +117,9 @@ export function getBestImageUrl(file: Typo3File | undefined): string {
   );
 }
 
+/**
+ * Fetches page data from the TYPO3 Headless API.
+ */
 export async function fetchPageData<T = any>(path: string = '/', searchParams: Record<string, any> | null = null, cookie: string | null = null): Promise<T> {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
 
@@ -149,6 +173,9 @@ export async function fetchPageData<T = any>(path: string = '/', searchParams: R
   });
 }
 
+/**
+ * Fetches initial data (menus, rootline) from the TYPO3 Headless API.
+ */
 export async function fetchInitialData<T = any>(cookie: string | null = null): Promise<T | null> {
   const apiBase = siteConfig.typo3BaseUrl.replace(/\/$/, '');
   const url = `${apiBase}/?type=834`;
@@ -164,6 +191,9 @@ export async function fetchInitialData<T = any>(cookie: string | null = null): P
   }
 }
 
+/**
+ * Normalizes content columns into a standard record format for the Renderer.
+ */
 export function normalizeContentColumns(content: any): Record<string, Typo3ContentElement[]> {
   if (typeof content === 'string') {
     const html = content.trim();
@@ -225,6 +255,9 @@ export function normalizeContentColumns(content: any): Record<string, Typo3Conte
   }, {});
 }
 
+/**
+ * Deeply normalizes page data to ensure content columns are always correctly structured.
+ */
 export function normalizePageData(page: any): Typo3Page {
   if (!page || typeof page !== 'object') return page;
   const content =
@@ -242,6 +275,9 @@ export function normalizePageData(page: any): Typo3Page {
   };
 }
 
+/**
+ * Flattens all content elements from all columns into a single array for simple list rendering.
+ */
 export function flattenContent(content: any): Typo3ContentElement[] {
   return Object.entries(normalizeContentColumns(content))
     .sort(([a], [b]) => a.localeCompare(b))
