@@ -16,5 +16,12 @@ const eslintConfig = [
       "react-hooks/exhaustive-deps": "warn",
     },
   },
+  {
+    files: ["src/app/api/**/*.{ts,tsx,js,jsx}"],
+    rules: {
+      "react/display-name": "off",
+    },
+  },
 ];
+
 export default eslintConfig;
